@@ -20,6 +20,13 @@ jobs:
           FIREBASE_SA_B64: ${{ secrets.FIREBASE_SA_B64 }}
         run: node index.mjs
 
+      - name: Send test push (manual)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          FIREBASE_SA_B64: ${{ secrets.FIREBASE_SA_B64 }}
+          TOPIC: team_herren_h1
+        run: node test-push.mjs
+
       - name: Commit state
         run: |
           if git diff --quiet; then
