@@ -1,0 +1,33 @@
+name: svo-push-scheduler
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install
+
+      - name: Run scheduler
+        env:
+          FIREBASE_SA_B64: ${{ secrets.FIREBASE_SA_B64 }}
+        run: node index.mjs
+
+      - name: Commit state
+        run: |
+          if git diff --quiet; then
+            echo "No state changes"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add state.json
+            git commit -m "Update push state"
+            git push
+          fi
