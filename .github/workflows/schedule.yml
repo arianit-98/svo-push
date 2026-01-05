@@ -27,14 +27,19 @@ jobs:
           TOPIC: team_herren_h1
         run: node test-push.mjs
 
-      - name: Commit state
+            - name: Commit state
         run: |
           if git diff --quiet; then
             echo "No state changes"
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add state.json
-            git commit -m "Update push state"
-            git push
+            exit 0
           fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add state.json
+          git commit -m "Update push state" || echo "Nothing to commit"
+
+          # Wichtig: Remote Änderungen holen, dann pushen
+          git pull --rebase origin main
+          git push origin HEAD:main
