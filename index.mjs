@@ -124,13 +124,7 @@ async function sendToTopic(topic, title, body, data = {}) {
 
 // ====== Hauptlauf ======
 (async () => {
-  const now = DateTime.now().setZone(TZ);
-  // 🔴 TEMP TEST — NUR FÜR MANUELLEN PUSH-TEST
-  const FORCE_TEST_PUSH = true;
-
-// 👉 Zielzeitpunkt: 05.01.2026 15:15 Europe/Berlin
-  const FORCE_TIME = new Date("2026-01-05T15:30:00+01:00");
-
+  const now = DateTime.now().setZone(TZ)
   const lookahead = now.plus({ days: LOOKAHEAD_DAYS });
 
   console.log(`Now: ${now.toISO()} (${TZ}), window ±${WINDOW_MINUTES}min`);
