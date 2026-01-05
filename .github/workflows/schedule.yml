@@ -1,106 +1,60 @@
-name: svo-push-scheduler
+name: Push Scheduler
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/5 * * * *"   # alle 5 Minuten
   workflow_dispatch:
-    inputs:
-      send_test_push:
-        description: "Test-Push senden (node test-push.mjs) – nur manueller Start"
-        required: false
-        default: "false"
-      test_topic:
-        description: "Topic für test-push.mjs (z.B. team_herren_h1)"
-        required: false
-        default: "team_herren_h1"
 
-      force_push_at:
-        description: "Force Push Zeitpunkt (ISO), z.B. 2026-01-05T15:30:00+01:00"
-        required: false
-        default: ""
-      force_push_topic:
-        description: "Force Push Topic, z.B. team_herren_h1"
-        required: false
-        default: "team_herren_h1"
-      force_push_title:
-        description: "Force Push Titel"
-        required: false
-        default: "⏱ TEST – Herren (1h)"
-      force_push_body:
-        description: "Force Push Text"
-        required: false
-        default: "TEST: Push-System funktioniert ✅ (Text optimieren wir gleich)"
+permissions:
+  contents: write
 
 concurrency:
-  group: svo-push-state
-  cancel-in-progress: true
+  group: push-scheduler
+  cancel-in-progress: false
 
 jobs:
   run:
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          persist-credentials: true
           fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "npm"
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install deps
+        run: npm ci
 
       - name: Run scheduler
         env:
           FIREBASE_SA_B64: ${{ secrets.FIREBASE_SA_B64 }}
-
-          # Force-Push (nur relevant, wenn du inputs setzt)
-          FORCE_PUSH_AT: ${{ inputs.force_push_at }}
-          FORCE_PUSH_TOPIC: ${{ inputs.force_push_topic }}
-          FORCE_PUSH_TITLE: ${{ inputs.force_push_title }}
-          FORCE_PUSH_BODY: ${{ inputs.force_push_body }}
+          FORCE_PUSH_AT: ${{ secrets.FORCE_PUSH_AT }}
+          FORCE_PUSH_TOPIC: ${{ secrets.FORCE_PUSH_TOPIC }}
+          FORCE_PUSH_TITLE: ${{ secrets.FORCE_PUSH_TITLE }}
+          FORCE_PUSH_BODY: ${{ secrets.FORCE_PUSH_BODY }}
         run: node index.mjs
 
-      - name: Send test push (manual)
-        if: github.event_name == 'workflow_dispatch' && inputs.send_test_push == 'true'
-        env:
-          FIREBASE_SA_B64: ${{ secrets.FIREBASE_SA_B64 }}
-          TOPIC: ${{ inputs.test_topic }}
-        run: node test-push.mjs
-
-      - name: Commit & push state.json
-        shell: bash
+      - name: Commit updated state/admin queue (only)
         run: |
-          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet; then
+          # nur die Dateien, die wir wirklich versionieren wollen:
+          git add admin_queue.json state.json || true
+
+          if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
           fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add state.json
-          git commit -m "Update push state" || true
+          git commit -m "Update push state"
 
           git pull --rebase origin main
-
-          for i in 1 2 3; do
-            if git push origin HEAD:main; then
-              echo "Pushed state.json successfully."
-              exit 0
-            fi
-            echo "Push failed, retrying in 3s... ($i/3)"
-            sleep 3
-            git pull --rebase origin main
-          done
-
-          echo "Failed to push after retries."
-          exit 1
+          git push origin main
