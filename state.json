@@ -1,4 +1,109 @@
 {
   "sent": {},
-  "events": {}
+  "events": {
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
+      "kickoff": "2026-01-18T18:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Germania Obrigheim - HG Königshofen/Sachsenflur",
+      "homeAway": "home",
+      "opponent": "HG Königshofen/Sachsenflur",
+      "teamKey": "herren"
+    },
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODIx": {
+      "kickoff": "2026-01-31T19:00:00.000+01:00",
+      "location": "Stauferhalle, Fronhäuserstraße 5, D-74206 Bad Wimpfen",
+      "summary": "HSG Staufer Bad Wimpfen/Biberach - SV Germania Obrigheim",
+      "homeAway": "away",
+      "opponent": "HSG Staufer Bad Wimpfen/Biberach",
+      "teamKey": "herren"
+    },
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODM2": {
+      "kickoff": "2026-02-08T18:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Germania Obrigheim - HSG Kochertürn/Stein",
+      "homeAway": "home",
+      "opponent": "HSG Kochertürn/Stein",
+      "teamKey": "herren"
+    },
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODU2": {
+      "kickoff": "2026-02-22T17:15:00.000+01:00",
+      "location": "SportCentrum, August-Thalheimer-Straße, D-74182 Obersulm",
+      "summary": "TSV Willsbach - SV Germania Obrigheim",
+      "homeAway": "away",
+      "opponent": "TSV Willsbach",
+      "teamKey": "herren"
+    },
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODc2": {
+      "kickoff": "2026-03-01T18:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Germania Obrigheim - SG Heuchelberg",
+      "homeAway": "home",
+      "opponent": "SG Heuchelberg",
+      "teamKey": "herren"
+    },
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTM2": {
+      "kickoff": "2026-03-22T16:00:00.000+01:00",
+      "location": "Sporthalle, Kleines Feldle, D-71634 Ludwigsburg-Pflugfelden",
+      "summary": "HB Ludwigsburg 2 - SV Germania Obrigheim",
+      "homeAway": "away",
+      "opponent": "HB Ludwigsburg 2",
+      "teamKey": "herren"
+    },
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTUx": {
+      "kickoff": "2026-03-29T18:00:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Germania Obrigheim - HSG Heilbronn",
+      "homeAway": "home",
+      "opponent": "HSG Heilbronn",
+      "teamKey": "herren"
+    },
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTYx": {
+      "kickoff": "2026-04-11T15:00:00.000+02:00",
+      "location": "Rundsporthalle, Paul-Klee-Straße 11, D-71679 Asperg",
+      "summary": "TSV Asperg 2 - SV Germania Obrigheim",
+      "homeAway": "away",
+      "opponent": "TSV Asperg 2",
+      "teamKey": "herren"
+    },
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTc2": {
+      "kickoff": "2026-04-18T18:00:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Germania Obrigheim - TV Hardheim 1895 2",
+      "homeAway": "home",
+      "opponent": "TV Hardheim 1895 2",
+      "teamKey": "herren"
+    },
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwMzk2": {
+      "kickoff": "2026-01-18T16:15:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neckarelz-Obrigheim - SG Gundelsheim",
+      "homeAway": "home",
+      "opponent": "SG Gundelsheim",
+      "teamKey": "c1"
+    },
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwMzYx": {
+      "kickoff": "2026-02-08T13:00:00.000+01:00",
+      "location": "Jahnhalle, Hammerweg 7, D-74821 Mosbach",
+      "summary": "TV Mosbach - JSG Neckarelz-Obrigheim",
+      "homeAway": "away",
+      "opponent": "TV Mosbach",
+      "teamKey": "c1"
+    },
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDA2": {
+      "kickoff": "2026-03-01T16:00:00.000+01:00",
+      "location": "Neckarhalle, Jahnstraße, D-74354 Besigheim",
+      "summary": "EK Besigheim Handball - JSG Neckarelz-Obrigheim",
+      "homeAway": "away",
+      "opponent": "EK Besigheim Handball",
+      "teamKey": "c1"
+    },
+    "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDI2": {
+      "kickoff": "2026-03-15T14:15:00.000+01:00",
+      "location": "Sporthalle1 Bönnigheim, Schulstraße, D-74357 Bönnigheim",
+      "summary": "TSV Bönnigheim - JSG Neckarelz-Obrigheim",
+      "homeAway": "away",
+      "opponent": "TSV Bönnigheim",
+      "teamKey": "c1"
+    }
+  }
 }
