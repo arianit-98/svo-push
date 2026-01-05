@@ -3,21 +3,42 @@ name: svo-push-scheduler
 on:
   schedule:
     - cron: "*/5 * * * *"
-  concurrency:
-  group: push-state
-  cancel-in-progress: true
-
   workflow_dispatch:
+    inputs:
+      send_test_push:
+        description: "Test-Push senden (nur manueller Start)"
+        required: false
+        default: "true"
+      test_topic:
+        description: "Topic für Test-Push (z.B. team_herren_h1)"
+        required: false
+        default: "team_herren_h1"
+
+# Verhindert, dass zwei Läufe gleichzeitig state.json anfassen
+concurrency:
+  group: svo-push-state
+  cancel-in-progress: true
 
 jobs:
   run:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - run: npm install
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Run scheduler
         env:
@@ -25,16 +46,19 @@ jobs:
         run: node index.mjs
 
       - name: Send test push (manual)
-        if: github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'workflow_dispatch' && inputs.send_test_push == 'true'
         env:
           FIREBASE_SA_B64: ${{ secrets.FIREBASE_SA_B64 }}
-          TOPIC: team_herren_h1
+          TOPIC: ${{ inputs.test_topic }}
         run: node test-push.mjs
 
-            - name: Commit state
+      - name: Commit & push state.json
+        shell: bash
         run: |
+          set -e
+
           if git diff --quiet; then
-            echo "No state changes"
+            echo "No changes to commit."
             exit 0
           fi
 
@@ -42,8 +66,21 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add state.json
-          git commit -m "Update push state" || echo "Nothing to commit"
+          git commit -m "Update push state" || true
 
-          # Wichtig: Remote Änderungen holen, dann pushen
+          # Rebase auf neuesten Stand, um "fetch first" zu vermeiden
           git pull --rebase origin main
-          git push origin HEAD:main
+
+          # Push mit Retry (falls GitHub gerade parallel committet hat)
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Pushed state.json successfully."
+              exit 0
+            fi
+            echo "Push failed, retrying in 3s... ($i/3)"
+            sleep 3
+            git pull --rebase origin main
+          done
+
+          echo "Failed to push after retries."
+          exit 1
