@@ -1,10 +1,4 @@
 {
-  "sent": { ... },
-  "events": {
-    "herren|2026-01-18": {
-      "kickoff": "2026-01-18T18:00:00+01:00",
-      "location": "Neckarhalle Obrigheim",
-      "summary": "SVO - HG Königshofen/Sachsenflur"
-    }
-  }
+  "sent": {},
+  "events": {}
 }
