@@ -4,11 +4,11 @@ import { DateTime } from "luxon";
 import admin from "firebase-admin";
 
 const TZ = "Europe/Berlin";
-
-// ====== Einstellungen ======
-const WINDOW_MINUTES = 4;          // Zeitfenster, in dem gesendet wird (±4 min)
-const LOOKAHEAD_DAYS = 180;        // wie weit wir nach vorne schauen
 const STATE_PATH = "./state.json";
+
+// ====== Scheduler Einstellungen ======
+const WINDOW_MINUTES = 4;
+const LOOKAHEAD_DAYS = 180;
 
 // Teams / ICS-Feeds
 const FEEDS = [
@@ -24,18 +24,22 @@ const FEEDS = [
   }
 ];
 
-// Topics pro Team + Offset
 const TOPICS = {
   herren: { d4: "team_herren_d4", d1: "team_herren_d1", h1: "team_herren_h1" },
   c1:     { d4: "team_c1_d4",     d1: "team_c1_d1",     h1: "team_c1_h1" }
 };
 
-// Offsets, die du als Presets anbietest
 const OFFSETS = [
   { key: "d4", minus: { days: 4 }, prefix: "In 4 Tagen" },
   { key: "d1", minus: { days: 1 }, prefix: "Morgen" },
   { key: "h1", minus: { hours: 1 }, prefix: "In 1 Stunde" }
 ];
+
+// ====== Force-Push (für deinen Test) ======
+const FORCE_PUSH_AT = (process.env.FORCE_PUSH_AT || "").trim();      // ISO Zeitpunkt
+const FORCE_PUSH_TOPIC = (process.env.FORCE_PUSH_TOPIC || "").trim();
+const FORCE_PUSH_TITLE = (process.env.FORCE_PUSH_TITLE || "").trim();
+const FORCE_PUSH_BODY = (process.env.FORCE_PUSH_BODY || "").trim();
 
 // ====== Firebase Admin init ======
 if (!process.env.FIREBASE_SA_B64) {
@@ -60,6 +64,9 @@ if (fs.existsSync(STATE_PATH)) {
   } catch {
     state = { sent: {} };
   }
+} else {
+  // falls state.json fehlt, legen wir es an
+  fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
 }
 
 function wasSent(id) {
@@ -76,24 +83,18 @@ function norm(s) {
   return (s || "").toString().replace(/\s+/g, " ").trim();
 }
 
-// ====== Event Parsing / Message ======
 function extractOpponent(summary, teamLabel) {
-  // versucht Gegner halbwegs schön zu extrahieren, bleibt aber robust
-  // Beispiele: "SVO Obrigheim - TV X", "TV X - SVO Obrigheim", "SVO Obrigheim vs TV X"
   const s = norm(summary);
   if (!s) return "";
 
-  // split candidates
   const splitters = [" - ", " vs ", " Vs ", " VS ", " : "];
   for (const sp of splitters) {
     if (s.includes(sp)) {
       const [a, b] = s.split(sp).map(norm);
-      // wenn TeamLabel vorkommt, nimm die andere Seite als Gegner
       const aHas = a.toLowerCase().includes(teamLabel.toLowerCase());
       const bHas = b.toLowerCase().includes(teamLabel.toLowerCase());
       if (aHas && !bHas) return b;
       if (bHas && !aHas) return a;
-      // sonst: gib beide an
       return `${a} vs ${b}`;
     }
   }
@@ -109,11 +110,9 @@ function makeNotification(feed, ev) {
   const summary = norm(ev.summary || "Spiel");
   const location = norm(ev.location || "");
   const opponent = extractOpponent(summary, feed.teamLabel);
-
   return { start, summary, location, opponent };
 }
 
-// ====== Senden ======
 async function sendToTopic(topic, title, body, data = {}) {
   await admin.messaging().send({
     topic,
@@ -124,11 +123,40 @@ async function sendToTopic(topic, title, body, data = {}) {
 
 // ====== Hauptlauf ======
 (async () => {
-  const now = DateTime.now().setZone(TZ)
+  const now = DateTime.now().setZone(TZ);
   const lookahead = now.plus({ days: LOOKAHEAD_DAYS });
 
   console.log(`Now: ${now.toISO()} (${TZ}), window ±${WINDOW_MINUTES}min`);
 
+  // 0) FORCE PUSH (wenn gesetzt)
+  if (FORCE_PUSH_AT && FORCE_PUSH_TOPIC) {
+    const forceAt = DateTime.fromISO(FORCE_PUSH_AT, { zone: TZ });
+    if (forceAt.isValid) {
+      const diffMin = forceAt.diff(now, "minutes").minutes;
+      const within = diffMin >= -WINDOW_MINUTES && diffMin <= WINDOW_MINUTES;
+
+      const forceId = `force|${FORCE_PUSH_TOPIC}|${forceAt.toISO()}|${FORCE_PUSH_TITLE}|${FORCE_PUSH_BODY}`;
+
+      if (within && !wasSent(forceId)) {
+        console.log(`FORCE SENDING -> topic=${FORCE_PUSH_TOPIC} at=${forceAt.toISO()}`);
+        await sendToTopic(
+          FORCE_PUSH_TOPIC,
+          FORCE_PUSH_TITLE || "⏱ TEST",
+          FORCE_PUSH_BODY || "TEST Push ✅",
+          { kind: "force_test", at: forceAt.toISO() }
+        );
+        markSent(forceId);
+        saveState();
+        console.log("FORCE push done");
+      } else {
+        console.log(`FORCE not sent (withinWindow=${within}, alreadySent=${wasSent(forceId)})`);
+      }
+    } else {
+      console.log("FORCE_PUSH_AT invalid ISO, skipping force push");
+    }
+  }
+
+  // 1) NORMALER SCHEDULER (ICS)
   for (const feed of FEEDS) {
     console.log(`Loading ICS for ${feed.teamKey}...`);
     const cal = await ical.async.fromURL(feed.ics);
@@ -137,8 +165,9 @@ async function sendToTopic(topic, title, body, data = {}) {
       if (!item || item.type !== "VEVENT" || !item.start) continue;
 
       const { start, summary, location, opponent } = makeNotification(feed, item);
-      if (start < now.minus({ hours: 6 })) continue;       // vergangenes ignorieren
-      if (start > lookahead) continue;                     // zu weit weg ignorieren
+
+      if (start < now.minus({ hours: 6 })) continue;
+      if (start > lookahead) continue;
 
       for (const off of OFFSETS) {
         const fireAt = start.minus(off.minus);
@@ -146,23 +175,17 @@ async function sendToTopic(topic, title, body, data = {}) {
 
         if (diffMin < -WINDOW_MINUTES || diffMin > WINDOW_MINUTES) continue;
 
-        // eindeutige ID: team + offset + kickoff ISO + summary
         const id = `${feed.teamKey}|${off.key}|${start.toISO()}|${summary}`;
-
-        if (wasSent(id)) {
-          // schon gesendet
-          continue;
-        }
+        if (wasSent(id)) continue;
 
         const topic = TOPICS[feed.teamKey][off.key];
 
         const title = `${off.prefix}: ${feed.teamLabel}`;
         const when = formatKickoff(start);
-        const bodyParts = [];
 
+        const bodyParts = [];
         if (opponent) bodyParts.push(opponent);
         else bodyParts.push(summary);
-
         bodyParts.push(when);
         if (location) bodyParts.push(location);
 
@@ -170,6 +193,7 @@ async function sendToTopic(topic, title, body, data = {}) {
 
         console.log(`SENDING -> topic=${topic} id=${id}`);
         await sendToTopic(topic, title, body, {
+          kind: "match",
           team: feed.teamKey,
           offset: off.key,
           kickoff: start.toISO(),
