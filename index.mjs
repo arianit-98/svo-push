@@ -5,6 +5,7 @@ import admin from "firebase-admin";
 
 const TZ = "Europe/Berlin";
 const STATE_PATH = "./state.json";
+const ADMIN_QUEUE_PATH = "./admin_queue.json";
 
 // ====== Scheduler Einstellungen ======
 const WINDOW_MINUTES = 4;
@@ -103,7 +104,6 @@ function splitMatchup(summary) {
   const s = norm(summary);
   if (!s) return null;
 
-  // typische Trenner im Handball-Kontext
   const splitters = [" - ", " vs. ", " vs ", " VS ", " : "];
   for (const sp of splitters) {
     if (s.includes(sp)) {
@@ -121,7 +121,6 @@ function isHomeByVenue(location, homeHints = []) {
 }
 
 function determineHomeAway(feed, summary, location) {
-  // Primär: aus dem Matchup (links/rechts)
   const matchup = splitMatchup(summary);
   const club = feed.clubShort;
 
@@ -139,10 +138,7 @@ function determineHomeAway(feed, summary, location) {
     if (rightHasClub && !leftHasClub) return "away";
   }
 
-  // Fallback: Ort/Halle-Hints
   if (isHomeByVenue(location, feed.homeVenueHints)) return "home";
-
-  // Default: konservativ
   return "away";
 }
 
@@ -155,7 +151,6 @@ function extractOpponentName(feed, summary, homeAway) {
     const right = cleanupTeamName(matchup.right);
 
     if (homeAway === "home") {
-      // Gegner ist rechts (typisch: SVO - Gegner)
       return (
         cleanupTeamName(
           right
@@ -165,7 +160,6 @@ function extractOpponentName(feed, summary, homeAway) {
         ).trim() || right
       );
     } else {
-      // Gegner ist links (typisch: Gegner - SVO)
       return (
         cleanupTeamName(
           left
@@ -195,7 +189,7 @@ function formatLine2(dt, location) {
 }
 
 function makeMatchupLine(feed, homeAway, opponent) {
-  const club = feed.clubShort; // Herren: SVO, Jugend: JSG
+  const club = feed.clubShort;
   return homeAway === "home" ? `${club} vs. ${opponent}` : `${opponent} vs. ${club}`;
 }
 
@@ -212,9 +206,7 @@ function makeBody(feed, homeAway, opponent, dt, location) {
   return `${line1}\n${line2}`;
 }
 
-// Collapse/Tag für doppelte Topics (wenn jemand mehrere Abos hat)
 function makeCollapseId(prefix, teamKey, eventKey) {
-  // APNS max ~64 chars ist üblich, wir halten es kurz
   const raw = `${prefix}-${teamKey}-${eventKey}`;
   return raw.length <= 60 ? raw : raw.slice(0, 60);
 }
@@ -234,6 +226,93 @@ async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
   await admin.messaging().send(msg);
 }
 
+// ====== Admin Queue ======
+function loadAdminQueue() {
+  if (!fs.existsSync(ADMIN_QUEUE_PATH)) {
+    // wenn Datei fehlt -> neutral
+    return { items: [] };
+  }
+  try {
+    const q = JSON.parse(fs.readFileSync(ADMIN_QUEUE_PATH, "utf8"));
+    q.items ||= [];
+    return q;
+  } catch {
+    return { items: [] };
+  }
+}
+
+function saveAdminQueue(q) {
+  fs.writeFileSync(ADMIN_QUEUE_PATH, JSON.stringify(q, null, 2));
+}
+
+async function processAdminQueue(now) {
+  const q = loadAdminQueue();
+  if (!q.items.length) return;
+
+  const remaining = [];
+  let sentCount = 0;
+
+  for (const it of q.items) {
+    const sendAtISO = (it.sendAt || "").trim();
+    const topic = (it.topic || "all").trim() || "all";
+    const title = norm(it.title || "");
+    const body = norm(it.body || "");
+
+    if (!sendAtISO || !title || !body) {
+      // kaputtes Item -> entfernen, damit es nicht blockiert
+      console.log("ADMIN QUEUE: skipping invalid item and removing.");
+      continue;
+    }
+
+    const sendAt = DateTime.fromISO(sendAtISO, { zone: TZ });
+    if (!sendAt.isValid) {
+      console.log("ADMIN QUEUE: invalid sendAt, removing:", sendAtISO);
+      continue;
+    }
+
+    const diffMin = sendAt.diff(now, "minutes").minutes;
+    const within = diffMin >= -WINDOW_MINUTES && diffMin <= WINDOW_MINUTES;
+
+    const id = `admin|${topic}|${sendAt.toISO()}|${title}|${body}`;
+
+    if (!within) {
+      // noch nicht dran (oder zu weit vorbei) -> drin lassen, wenn Zukunft
+      // Wenn schon sehr alt (z.B. > 2h vorbei), entfernen wir es.
+      if (diffMin < -120) {
+        console.log("ADMIN QUEUE: expired item removed:", it.id || id);
+        continue;
+      }
+      remaining.push(it);
+      continue;
+    }
+
+    if (wasSent(id)) {
+      console.log("ADMIN QUEUE: already sent (deduped). Removing item.");
+      continue;
+    }
+
+    console.log(`ADMIN QUEUE: SENDING -> topic=${topic} at=${sendAt.toISO()}`);
+
+    await sendToTopic(
+      topic,
+      title,
+      body,
+      { kind: "admin", scheduledAt: sendAt.toISO(), queueId: it.id || "" },
+      "admin-broadcast"
+    );
+
+    markSent(id);
+    sentCount++;
+    // nicht in remaining -> damit erledigt
+  }
+
+  if (sentCount > 0 || remaining.length !== q.items.length) {
+    q.items = remaining;
+    saveAdminQueue(q);
+    console.log(`ADMIN QUEUE: done. sent=${sentCount}, remaining=${remaining.length}`);
+  }
+}
+
 // ====== Hauptlauf ======
 (async () => {
   const now = DateTime.now().setZone(TZ);
@@ -241,7 +320,10 @@ async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
 
   console.log(`Now: ${now.toISO()} (${TZ}), window ±${WINDOW_MINUTES}min`);
 
-  // 0) FORCE PUSH (falls gesetzt)
+  // 0) ADMIN QUEUE zuerst (damit Admin Push zuverlässig rausgeht)
+  await processAdminQueue(now);
+
+  // 1) FORCE PUSH (falls gesetzt)
   if (FORCE_PUSH_AT && FORCE_PUSH_TOPIC) {
     const forceAt = DateTime.fromISO(FORCE_PUSH_AT, { zone: TZ });
     if (forceAt.isValid) {
@@ -269,7 +351,7 @@ async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
     }
   }
 
-  // 1) NORMALER SCHEDULER (ICS)
+  // 2) NORMALER SCHEDULER (ICS)
   for (const feed of FEEDS) {
     console.log(`Loading ICS for ${feed.teamKey}...`);
     const cal = await ical.async.fromURL(feed.ics);
@@ -280,7 +362,7 @@ async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
       const start = DateTime.fromJSDate(item.start, { zone: TZ });
       const summary = norm(item.summary || "Spiel");
       const location = norm(item.location || "");
-      const uid = norm(item.uid || ""); // ICS UID (wenn vorhanden)
+      const uid = norm(item.uid || "");
 
       if (start < now.minus({ hours: 6 })) continue;
       if (start > lookahead) continue;
@@ -288,13 +370,9 @@ async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
       const homeAway = determineHomeAway(feed, summary, location);
       const opponent = extractOpponentName(feed, summary, homeAway);
 
-      // --- Event-Key für Verlegungs-Tracking ---
-      // 1) bevorzugt UID
-      // 2) sonst stabiler Hash-Ersatz aus Team + (Datum) + Summary
       const baseKey = uid || `${feed.teamKey}|${formatDate(start)}|${summary}`;
-      const eventKey = Buffer.from(baseKey).toString("base64url"); // stabil & safe als key
+      const eventKey = Buffer.from(baseKey).toString("base64url");
 
-      // --- Verlegung erkennen (kickoff/ort/heim-aus/gegner) ---
       const prev = state.events[eventKey];
       const currentSnapshot = {
         teamKey: feed.teamKey,
@@ -315,13 +393,11 @@ async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
         const homeAwayChanged = prev.homeAway !== currentSnapshot.homeAway;
 
         if (kickoffChanged || locationChanged || homeAwayChanged) {
-          // Verlegungs-Push: an ALLE 3 Topics, aber mit gleichem Collapse-ID (verhindert Spam wenn mehrfach abonniert)
           const placeEmoji = currentSnapshot.homeAway === "home" ? "🏠" : "✈️";
           const title = `🔁 ${placeEmoji} Spiel verlegt – ${feed.teamLabel} 💛💙`;
 
           const line1 = makeMatchupLine(feed, currentSnapshot.homeAway, currentSnapshot.opponent);
 
-          // Alt/Neu Format: wenn Datum geändert, Datum + Uhrzeit anzeigen, sonst nur Uhrzeit
           const prevDT = DateTime.fromISO(prev.kickoff, { zone: TZ });
           const currDT = start;
 
@@ -338,14 +414,12 @@ async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
 
           const body = `${line1}\nAlt: ${prevLine}\nNeu: ${currLine}`;
 
-          // Dedupe für Verlegungs-Push, damit es nicht bei jedem Run spamt
           const relocationId = `reloc|${feed.teamKey}|${eventKey}|${currentSnapshot.kickoff}|${currentSnapshot.location}|${currentSnapshot.homeAway}`;
           if (!wasSent(relocationId)) {
             console.log(`RELOCATION -> ${feed.teamKey} event=${eventKey}`);
 
             const collapseId = makeCollapseId("reloc", feed.teamKey, eventKey);
 
-            // an alle 3 Topics senden, aber collapseId sorgt (meist) dafür, dass es nur 1 Notification bleibt
             for (const k of ["d4", "d1", "h1"]) {
               const t = TOPICS[feed.teamKey][k];
               await sendToTopic(
@@ -374,7 +448,6 @@ async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
         }
       }
 
-      // Snapshot speichern/aktualisieren
       state.events[eventKey] = {
         kickoff: currentSnapshot.kickoff,
         location: currentSnapshot.location,
@@ -384,7 +457,6 @@ async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
         teamKey: currentSnapshot.teamKey,
       };
 
-      // --- Normale Reminder Pushes (d4/d1/h1) ---
       for (const off of OFFSETS) {
         const fireAt = start.minus(off.minus);
         const diffMin = fireAt.diff(now, "minutes").minutes;
