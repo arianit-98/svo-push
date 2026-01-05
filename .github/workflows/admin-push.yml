@@ -1,0 +1,62 @@
+name: Admin Push
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "Push title"
+        required: true
+        type: string
+      body:
+        description: "Push body"
+        required: true
+        type: string
+      send_at:
+        description: "Optional: schedule time (YYYY-MM-DDTHH:MM) in Europe/Berlin. Empty = send now."
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  admin_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Validate inputs
+        run: |
+          echo "TITLE=${{ inputs.title }}" | wc -c
+          echo "BODY=${{ inputs.body }}" | wc -c
+
+      - name: Send now OR enqueue
+        env:
+          FIREBASE_SA_B64: ${{ secrets.FIREBASE_SA_B64 }}
+          TITLE: ${{ inputs.title }}
+          BODY: ${{ inputs.body }}
+          SEND_AT: ${{ inputs.send_at }}
+        run: node scripts/admin_push_dispatch.mjs
+
+      - name: Commit queue changes (if any)
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add admin_queue.json
+          git commit -m "Admin push queued"
+          git push
