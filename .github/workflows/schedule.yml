@@ -6,15 +6,31 @@ on:
   workflow_dispatch:
     inputs:
       send_test_push:
-        description: "Test-Push senden (nur manueller Start)"
+        description: "Test-Push senden (node test-push.mjs) – nur manueller Start"
         required: false
-        default: "true"
+        default: "false"
       test_topic:
-        description: "Topic für Test-Push (z.B. team_herren_h1)"
+        description: "Topic für test-push.mjs (z.B. team_herren_h1)"
         required: false
         default: "team_herren_h1"
 
-# Verhindert, dass zwei Läufe gleichzeitig state.json anfassen
+      force_push_at:
+        description: "Force Push Zeitpunkt (ISO), z.B. 2026-01-05T15:30:00+01:00"
+        required: false
+        default: ""
+      force_push_topic:
+        description: "Force Push Topic, z.B. team_herren_h1"
+        required: false
+        default: "team_herren_h1"
+      force_push_title:
+        description: "Force Push Titel"
+        required: false
+        default: "⏱ TEST – Herren (1h)"
+      force_push_body:
+        description: "Force Push Text"
+        required: false
+        default: "TEST: Push-System funktioniert ✅ (Text optimieren wir gleich)"
+
 concurrency:
   group: svo-push-state
   cancel-in-progress: true
@@ -43,6 +59,12 @@ jobs:
       - name: Run scheduler
         env:
           FIREBASE_SA_B64: ${{ secrets.FIREBASE_SA_B64 }}
+
+          # Force-Push (nur relevant, wenn du inputs setzt)
+          FORCE_PUSH_AT: ${{ inputs.force_push_at }}
+          FORCE_PUSH_TOPIC: ${{ inputs.force_push_topic }}
+          FORCE_PUSH_TITLE: ${{ inputs.force_push_title }}
+          FORCE_PUSH_BODY: ${{ inputs.force_push_body }}
         run: node index.mjs
 
       - name: Send test push (manual)
@@ -68,10 +90,8 @@ jobs:
           git add state.json
           git commit -m "Update push state" || true
 
-          # Rebase auf neuesten Stand, um "fetch first" zu vermeiden
           git pull --rebase origin main
 
-          # Push mit Retry (falls GitHub gerade parallel committet hat)
           for i in 1 2 3; do
             if git push origin HEAD:main; then
               echo "Pushed state.json successfully."
