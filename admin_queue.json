@@ -1,3 +1,12 @@
 {
-  "items": []
+  "items": [
+    {
+      "id": "admin|2026-01-05T17:30:00.000+01:00|TEST|TEST SVO",
+      "sendAt": "2026-01-05T17:30:00.000+01:00",
+      "title": "TEST",
+      "body": "TEST SVO",
+      "topic": "all",
+      "createdAt": "2026-01-05T17:23:14.334+01:00"
+    }
+  ]
 }
