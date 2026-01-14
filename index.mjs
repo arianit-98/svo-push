@@ -1,15 +1,18 @@
 import fs from "fs";
+import dns from "dns";
+import https from "https";
+import axios from "axios";
 import ical from "node-ical";
 import { DateTime } from "luxon";
 import admin from "firebase-admin";
 
 const TZ = "Europe/Berlin";
 const STATE_PATH = "./state.json";
-const ADMIN_QUEUE_PATH = "./admin_queue.json";
 
 // ====== Scheduler Einstellungen ======
-const WINDOW_MINUTES = 4;
-const LOOKAHEAD_DAYS = 180;
+const WINDOW_MINUTES = 6;      // Toleranz pro Run
+const LOOKAHEAD_DAYS = 180;    // wie weit voraus wir Spiele betrachten
+const FETCH_TIMEOUT_MS = 15000;
 
 // Teams / ICS-Feeds
 const FEEDS = [
@@ -32,7 +35,7 @@ const FEEDS = [
 // Topics pro Team + Offset
 const TOPICS = {
   herren: { d4: "team_herren_d4", d1: "team_herren_d1", h1: "team_herren_h1" },
-  c1: { d4: "team_c1_d4", d1: "team_c1_d1", h1: "team_c1_h1" },
+  c1:     { d4: "team_c1_d4",     d1: "team_c1_d1",     h1: "team_c1_h1" },
 };
 
 // Offsets (Presets)
@@ -47,6 +50,60 @@ const FORCE_PUSH_AT = (process.env.FORCE_PUSH_AT || "").trim();
 const FORCE_PUSH_TOPIC = (process.env.FORCE_PUSH_TOPIC || "").trim();
 const FORCE_PUSH_TITLE = (process.env.FORCE_PUSH_TITLE || "").trim();
 const FORCE_PUSH_BODY = (process.env.FORCE_PUSH_BODY || "").trim();
+
+// ====== DNS/HTTP Robustness ======
+// IPv4 bevorzugen (hilft oft bei sporadischen ENOTFOUND/IPv6 Problemen im Runner)
+try {
+  dns.setDefaultResultOrder("ipv4first");
+} catch {
+  // älteres Node ignorieren
+}
+
+// https agent mit keepAlive + lookup family=4
+const httpsAgent = new https.Agent({
+  keepAlive: true,
+  lookup: (hostname, options, cb) => dns.lookup(hostname, { ...options, family: 4 }, cb),
+});
+
+const http = axios.create({
+  httpsAgent,
+  timeout: FETCH_TIMEOUT_MS,
+  headers: {
+    "User-Agent": "svo-push-scheduler/1.0 (+github-actions)",
+    "Accept": "text/calendar,text/plain,*/*",
+  },
+});
+
+async function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+async function fetchTextWithRetry(url, attempts = 4) {
+  let lastErr = null;
+
+  for (let i = 1; i <= attempts; i++) {
+    try {
+      const res = await http.get(url, { responseType: "text" });
+      return res.data;
+    } catch (e) {
+      lastErr = e;
+
+      const code = e?.cause?.code || e?.code || "";
+      const status = e?.response?.status;
+
+      console.log(`Fetch failed (${i}/${attempts}) url=${url} code=${code} status=${status || "-"}`);
+
+      // Bei 4xx lohnt Retry meist nicht
+      if (status && status >= 400 && status < 500) break;
+
+      // Backoff
+      const backoff = 1500 * i * i; // 1.5s, 6s, 13.5s, ...
+      await sleep(backoff);
+    }
+  }
+
+  throw lastErr;
+}
 
 // ====== Firebase Admin init ======
 if (!process.env.FIREBASE_SA_B64) {
@@ -63,14 +120,15 @@ admin.initializeApp({
 });
 
 // ====== State laden ======
-let state = { sent: {}, events: {} };
+let state = { sent: {}, events: {}, meta: {} };
 if (fs.existsSync(STATE_PATH)) {
   try {
     state = JSON.parse(fs.readFileSync(STATE_PATH, "utf8"));
     state.sent ||= {};
     state.events ||= {};
+    state.meta ||= {};
   } catch {
-    state = { sent: {}, events: {} };
+    state = { sent: {}, events: {}, meta: {} };
   }
 } else {
   fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
@@ -226,91 +284,12 @@ async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
   await admin.messaging().send(msg);
 }
 
-// ====== Admin Queue ======
-function loadAdminQueue() {
-  if (!fs.existsSync(ADMIN_QUEUE_PATH)) {
-    // wenn Datei fehlt -> neutral
-    return { items: [] };
-  }
-  try {
-    const q = JSON.parse(fs.readFileSync(ADMIN_QUEUE_PATH, "utf8"));
-    q.items ||= [];
-    return q;
-  } catch {
-    return { items: [] };
-  }
-}
-
-function saveAdminQueue(q) {
-  fs.writeFileSync(ADMIN_QUEUE_PATH, JSON.stringify(q, null, 2));
-}
-
-async function processAdminQueue(now) {
-  const q = loadAdminQueue();
-  if (!q.items.length) return;
-
-  const remaining = [];
-  let sentCount = 0;
-
-  for (const it of q.items) {
-    const sendAtISO = (it.sendAt || "").trim();
-    const topic = (it.topic || "all").trim() || "all";
-    const title = norm(it.title || "");
-    const body = norm(it.body || "");
-
-    if (!sendAtISO || !title || !body) {
-      // kaputtes Item -> entfernen, damit es nicht blockiert
-      console.log("ADMIN QUEUE: skipping invalid item and removing.");
-      continue;
-    }
-
-    const sendAt = DateTime.fromISO(sendAtISO, { zone: TZ });
-    if (!sendAt.isValid) {
-      console.log("ADMIN QUEUE: invalid sendAt, removing:", sendAtISO);
-      continue;
-    }
-
-    const diffMin = sendAt.diff(now, "minutes").minutes;
-    const within = diffMin >= -WINDOW_MINUTES && diffMin <= WINDOW_MINUTES;
-
-    const id = `admin|${topic}|${sendAt.toISO()}|${title}|${body}`;
-
-    if (!within) {
-      // noch nicht dran (oder zu weit vorbei) -> drin lassen, wenn Zukunft
-      // Wenn schon sehr alt (z.B. > 2h vorbei), entfernen wir es.
-      if (diffMin < -120) {
-        console.log("ADMIN QUEUE: expired item removed:", it.id || id);
-        continue;
-      }
-      remaining.push(it);
-      continue;
-    }
-
-    if (wasSent(id)) {
-      console.log("ADMIN QUEUE: already sent (deduped). Removing item.");
-      continue;
-    }
-
-    console.log(`ADMIN QUEUE: SENDING -> topic=${topic} at=${sendAt.toISO()}`);
-
-    await sendToTopic(
-      topic,
-      title,
-      body,
-      { kind: "admin", scheduledAt: sendAt.toISO(), queueId: it.id || "" },
-      "admin-broadcast"
-    );
-
-    markSent(id);
-    sentCount++;
-    // nicht in remaining -> damit erledigt
-  }
-
-  if (sentCount > 0 || remaining.length !== q.items.length) {
-    q.items = remaining;
-    saveAdminQueue(q);
-    console.log(`ADMIN QUEUE: done. sent=${sentCount}, remaining=${remaining.length}`);
-  }
+// Catch-up Fenster: statt nur "±WINDOW_MINUTES um fireAt",
+// schicken wir, wenn fireAt zwischen lastRun und now liegt (plus kleiner Toleranz).
+function shouldFire(fireAt, lastRun, now) {
+  const lower = lastRun.minus({ minutes: WINDOW_MINUTES });
+  const upper = now.plus({ minutes: WINDOW_MINUTES });
+  return fireAt >= lower && fireAt <= upper;
 }
 
 // ====== Hauptlauf ======
@@ -318,18 +297,22 @@ async function processAdminQueue(now) {
   const now = DateTime.now().setZone(TZ);
   const lookahead = now.plus({ days: LOOKAHEAD_DAYS });
 
-  console.log(`Now: ${now.toISO()} (${TZ}), window ±${WINDOW_MINUTES}min`);
+  // lastRun aus state lesen
+  let lastRun = null;
+  if (state.meta?.lastRun) {
+    const t = DateTime.fromISO(state.meta.lastRun, { zone: TZ });
+    if (t.isValid) lastRun = t;
+  }
+  // wenn noch nie gelaufen: "so tun als wäre lastRun 15 Minuten her"
+  if (!lastRun) lastRun = now.minus({ minutes: 15 });
 
-  // 0) ADMIN QUEUE zuerst (damit Admin Push zuverlässig rausgeht)
-  await processAdminQueue(now);
+  console.log(`Now: ${now.toISO()} (${TZ}), catch-up from lastRun=${lastRun.toISO()}, window ±${WINDOW_MINUTES}min`);
 
-  // 1) FORCE PUSH (falls gesetzt)
+  // 0) FORCE PUSH (falls gesetzt)
   if (FORCE_PUSH_AT && FORCE_PUSH_TOPIC) {
     const forceAt = DateTime.fromISO(FORCE_PUSH_AT, { zone: TZ });
     if (forceAt.isValid) {
-      const diffMin = forceAt.diff(now, "minutes").minutes;
-      const within = diffMin >= -WINDOW_MINUTES && diffMin <= WINDOW_MINUTES;
-
+      const within = shouldFire(forceAt, lastRun, now);
       const forceId = `force|${FORCE_PUSH_TOPIC}|${forceAt.toISO()}|${FORCE_PUSH_TITLE}|${FORCE_PUSH_BODY}`;
 
       if (within && !wasSent(forceId)) {
@@ -351,10 +334,20 @@ async function processAdminQueue(now) {
     }
   }
 
-  // 2) NORMALER SCHEDULER (ICS)
+  // 1) NORMALER SCHEDULER (ICS)
   for (const feed of FEEDS) {
     console.log(`Loading ICS for ${feed.teamKey}...`);
-    const cal = await ical.async.fromURL(feed.ics);
+
+    let cal;
+    try {
+      const icsText = await fetchTextWithRetry(feed.ics, 4);
+      cal = ical.parseICS(icsText);
+    } catch (e) {
+      // WICHTIG: nicht den ganzen Run killen (sonst bleiben auch andere Teams/State stehen)
+      const code = e?.cause?.code || e?.code || "";
+      console.log(`WARN: Failed to load ICS for ${feed.teamKey}. code=${code}. Will try again next run.`);
+      continue;
+    }
 
     for (const item of Object.values(cal)) {
       if (!item || item.type !== "VEVENT" || !item.start) continue;
@@ -370,6 +363,7 @@ async function processAdminQueue(now) {
       const homeAway = determineHomeAway(feed, summary, location);
       const opponent = extractOpponentName(feed, summary, homeAway);
 
+      // Event-Key
       const baseKey = uid || `${feed.teamKey}|${formatDate(start)}|${summary}`;
       const eventKey = Buffer.from(baseKey).toString("base64url");
 
@@ -379,14 +373,13 @@ async function processAdminQueue(now) {
         teamLabel: feed.teamLabel,
         clubShort: feed.clubShort,
         kickoff: start.toISO(),
-        date: formatDate(start),
-        time: formatTime(start),
         location,
         summary,
         homeAway,
         opponent,
       };
 
+      // --- Verlegung erkennen ---
       if (prev) {
         const kickoffChanged = prev.kickoff !== currentSnapshot.kickoff;
         const locationChanged = norm(prev.location) !== norm(currentSnapshot.location);
@@ -404,10 +397,8 @@ async function processAdminQueue(now) {
           const prevDate = formatDate(prevDT);
           const currDate = formatDate(currDT);
 
-          const prevWhen =
-            prevDate !== currDate ? `${prevDate} ${formatTime(prevDT)} Uhr` : `${formatTime(prevDT)} Uhr`;
-          const currWhen =
-            prevDate !== currDate ? `${currDate} ${formatTime(currDT)} Uhr` : `${formatTime(currDT)} Uhr`;
+          const prevWhen = prevDate !== currDate ? `${prevDate} ${formatTime(prevDT)} Uhr` : `${formatTime(prevDT)} Uhr`;
+          const currWhen = prevDate !== currDate ? `${currDate} ${formatTime(currDT)} Uhr` : `${formatTime(currDT)} Uhr`;
 
           const prevLine = `${prevWhen} - ${norm(prev.location) || "-"}`;
           const currLine = `${currWhen} - ${norm(currentSnapshot.location) || "-"}`;
@@ -448,6 +439,7 @@ async function processAdminQueue(now) {
         }
       }
 
+      // Snapshot speichern
       state.events[eventKey] = {
         kickoff: currentSnapshot.kickoff,
         location: currentSnapshot.location,
@@ -457,11 +449,11 @@ async function processAdminQueue(now) {
         teamKey: currentSnapshot.teamKey,
       };
 
+      // --- Normale Reminder Pushes (d4/d1/h1) ---
       for (const off of OFFSETS) {
         const fireAt = start.minus(off.minus);
-        const diffMin = fireAt.diff(now, "minutes").minutes;
 
-        if (diffMin < -WINDOW_MINUTES || diffMin > WINDOW_MINUTES) continue;
+        if (!shouldFire(fireAt, lastRun, now)) continue;
 
         const id = `${feed.teamKey}|${off.key}|${eventKey}|${currentSnapshot.kickoff}|${currentSnapshot.location}|${currentSnapshot.homeAway}`;
         if (wasSent(id)) continue;
@@ -471,7 +463,7 @@ async function processAdminQueue(now) {
         const title = makeTitle(feed, homeAway);
         const body = makeBody(feed, homeAway, opponent, start, location);
 
-        console.log(`SENDING -> topic=${topic} id=${id}`);
+        console.log(`SENDING -> topic=${topic} id=${id} fireAt=${fireAt.toISO()}`);
         await sendToTopic(topic, title, body, {
           kind: "match",
           team: feed.teamKey,
@@ -482,6 +474,9 @@ async function processAdminQueue(now) {
           opponent,
           location,
           summary,
+
+          // (optional) fürs spätere Deep-Linking in der App
+          // du kannst später in der App anhand "team" direkt zur richtigen Seite springen
         });
 
         markSent(id);
@@ -489,6 +484,8 @@ async function processAdminQueue(now) {
     }
   }
 
+  // lastRun aktualisieren
+  state.meta.lastRun = now.toISO();
   saveState();
   console.log("done");
 })().catch((e) => {
