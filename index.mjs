@@ -427,6 +427,11 @@ function shouldFire(fireAt, lastRun, now) {
                   newLocation: currentSnapshot.location || "",
                   homeAway: currentSnapshot.homeAway,
                   opponent: currentSnapshot.opponent,
+                  deeplink:
+                      feed.teamKey === "herren"
+                      ? "https://svohandball.de/de/mannschaften/1-mannschaft/"
+                      : "https://svohandball.de/de/mannschaften/c-jugend/",
+
                 },
                 collapseId
               );
@@ -464,20 +469,25 @@ function shouldFire(fireAt, lastRun, now) {
         const body = makeBody(feed, homeAway, opponent, start, location);
 
         console.log(`SENDING -> topic=${topic} id=${id} fireAt=${fireAt.toISO()}`);
-        await sendToTopic(topic, title, body, {
-          kind: "match",
-          team: feed.teamKey,
-          offset: off.key,
-          eventKey,
-          kickoff: start.toISO(),
-          homeAway,
-          opponent,
-          location,
-          summary,
+      
+        const deeplink =
+          feed.teamKey === "herren"
+          ? "https://svohandball.de/de/mannschaften/1-mannschaft/"
+          : "https://svohandball.de/de/mannschaften/c-jugend/";
 
-          // (optional) fürs spätere Deep-Linking in der App
-          // du kannst später in der App anhand "team" direkt zur richtigen Seite springen
-        });
+      await sendToTopic(topic, title, body, {
+        kind: "match",
+        team: feed.teamKey,
+        offset: off.key,
+        eventKey,
+        kickoff: start.toISO(),
+        homeAway,
+        opponent,
+        location,
+        summary,
+        deeplink,
+      });
+
 
         markSent(id);
       }
