@@ -1,7 +1,8 @@
 {
   "sent": {
     "c1|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwMzk2|2026-01-18T16:15:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "herren|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx|2026-01-18T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
+    "herren|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx|2026-01-18T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
+    "c1|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwMzk2|2026-01-18T16:15:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -110,6 +111,6 @@
     }
   },
   "meta": {
-    "lastRun": "2026-01-17T15:58:49.438+01:00"
+    "lastRun": "2026-01-17T16:24:37.906+01:00"
   }
 }
