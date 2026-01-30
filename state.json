@@ -6,7 +6,8 @@
     "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx|2026-01-18T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "c1|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwMzk2|2026-01-18T16:15:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx|2026-01-18T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "herren|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODIx|2026-01-31T19:00:00.000+01:00|Stauferhalle, Fronhäuserstraße 5, D-74206 Bad Wimpfen|away": true
+    "herren|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODIx|2026-01-31T19:00:00.000+01:00|Stauferhalle, Fronhäuserstraße 5, D-74206 Bad Wimpfen|away": true,
+    "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODIx|2026-01-31T19:00:00.000+01:00|Stauferhalle, Fronhäuserstraße 5, D-74206 Bad Wimpfen|away": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -115,6 +116,6 @@
     }
   },
   "meta": {
-    "lastRun": "2026-01-30T18:28:39.530+01:00"
+    "lastRun": "2026-01-30T19:00:33.418+01:00"
   }
 }
