@@ -11,7 +11,8 @@
     "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODIx|2026-01-31T19:00:00.000+01:00|Stauferhalle, Fronhäuserstraße 5, D-74206 Bad Wimpfen|away": true,
     "c1|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwMzYx|2026-02-08T13:00:00.000+01:00|Jahnhalle, Hammerweg 7, D-74821 Mosbach|away": true,
     "herren|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODM2|2026-02-08T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "c1|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwMzYx|2026-02-08T13:00:00.000+01:00|Jahnhalle, Hammerweg 7, D-74821 Mosbach|away": true
+    "c1|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwMzYx|2026-02-08T13:00:00.000+01:00|Jahnhalle, Hammerweg 7, D-74821 Mosbach|away": true,
+    "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODM2|2026-02-08T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -120,6 +121,6 @@
     }
   },
   "meta": {
-    "lastRun": "2026-02-07T17:51:37.297+01:00"
+    "lastRun": "2026-02-07T18:15:10.417+01:00"
   }
 }
