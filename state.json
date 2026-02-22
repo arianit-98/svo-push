@@ -16,7 +16,8 @@
     "c1|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwMzYx|2026-02-08T13:00:00.000+01:00|Jahnhalle, Hammerweg 7, D-74821 Mosbach|away": true,
     "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODM2|2026-02-08T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "herren|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODU2|2026-02-22T17:15:00.000+01:00|SportCentrum, August-Thalheimer-Straße, D-74182 Obersulm|away": true,
-    "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODU2|2026-02-22T17:15:00.000+01:00|SportCentrum, August-Thalheimer-Straße, D-74182 Obersulm|away": true
+    "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODU2|2026-02-22T17:15:00.000+01:00|SportCentrum, August-Thalheimer-Straße, D-74182 Obersulm|away": true,
+    "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODU2|2026-02-22T17:15:00.000+01:00|SportCentrum, August-Thalheimer-Straße, D-74182 Obersulm|away": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -125,6 +126,6 @@
     }
   },
   "meta": {
-    "lastRun": "2026-02-22T16:01:08.223+01:00"
+    "lastRun": "2026-02-22T16:34:28.049+01:00"
   }
 }
