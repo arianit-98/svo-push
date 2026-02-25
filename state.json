@@ -17,7 +17,8 @@
     "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODM2|2026-02-08T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "herren|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODU2|2026-02-22T17:15:00.000+01:00|SportCentrum, August-Thalheimer-Straße, D-74182 Obersulm|away": true,
     "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODU2|2026-02-22T17:15:00.000+01:00|SportCentrum, August-Thalheimer-Straße, D-74182 Obersulm|away": true,
-    "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODU2|2026-02-22T17:15:00.000+01:00|SportCentrum, August-Thalheimer-Straße, D-74182 Obersulm|away": true
+    "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODU2|2026-02-22T17:15:00.000+01:00|SportCentrum, August-Thalheimer-Straße, D-74182 Obersulm|away": true,
+    "c1|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDA2|2026-03-01T16:00:00.000+01:00|Neckarhalle, Jahnstraße, D-74354 Besigheim|away": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -126,6 +127,6 @@
     }
   },
   "meta": {
-    "lastRun": "2026-02-25T15:13:14.837+01:00"
+    "lastRun": "2026-02-25T16:11:09.147+01:00"
   }
 }
