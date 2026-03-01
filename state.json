@@ -22,7 +22,8 @@
     "herren|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODc2|2026-03-01T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "c1|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDA2|2026-03-01T16:00:00.000+01:00|Neckarhalle, Jahnstraße, D-74354 Besigheim|away": true,
     "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODc2|2026-03-01T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "c1|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDA2|2026-03-01T16:00:00.000+01:00|Neckarhalle, Jahnstraße, D-74354 Besigheim|away": true
+    "c1|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDA2|2026-03-01T16:00:00.000+01:00|Neckarhalle, Jahnstraße, D-74354 Besigheim|away": true,
+    "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODc2|2026-03-01T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -131,6 +132,6 @@
     }
   },
   "meta": {
-    "lastRun": "2026-03-01T16:44:03.676+01:00"
+    "lastRun": "2026-03-01T16:56:51.163+01:00"
   }
 }
