@@ -24,7 +24,8 @@
     "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODc2|2026-03-01T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "c1|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDA2|2026-03-01T16:00:00.000+01:00|Neckarhalle, Jahnstraße, D-74354 Besigheim|away": true,
     "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODc2|2026-03-01T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "c1|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDI2|2026-03-15T14:15:00.000+01:00|Sporthalle1 Bönnigheim, Schulstraße, D-74357 Bönnigheim|away": true
+    "c1|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDI2|2026-03-15T14:15:00.000+01:00|Sporthalle1 Bönnigheim, Schulstraße, D-74357 Bönnigheim|away": true,
+    "c1|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDI2|2026-03-15T14:15:00.000+01:00|Sporthalle1 Bönnigheim, Schulstraße, D-74357 Bönnigheim|away": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -133,6 +134,6 @@
     }
   },
   "meta": {
-    "lastRun": "2026-03-14T13:20:27.043+01:00"
+    "lastRun": "2026-03-14T14:16:15.054+01:00"
   }
 }
