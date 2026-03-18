@@ -26,7 +26,8 @@
     "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODc2|2026-03-01T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "c1|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDI2|2026-03-15T14:15:00.000+01:00|Sporthalle1 Bönnigheim, Schulstraße, D-74357 Bönnigheim|away": true,
     "c1|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDI2|2026-03-15T14:15:00.000+01:00|Sporthalle1 Bönnigheim, Schulstraße, D-74357 Bönnigheim|away": true,
-    "c1|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDI2|2026-03-15T14:15:00.000+01:00|Sporthalle1 Bönnigheim, Schulstraße, D-74357 Bönnigheim|away": true
+    "c1|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDI2|2026-03-15T14:15:00.000+01:00|Sporthalle1 Bönnigheim, Schulstraße, D-74357 Bönnigheim|away": true,
+    "herren|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTM2|2026-03-22T16:00:00.000+01:00|Sporthalle, Kleines Feldle, D-71634 Ludwigsburg-Pflugfelden|away": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -135,6 +136,6 @@
     }
   },
   "meta": {
-    "lastRun": "2026-03-18T15:23:20.485+01:00"
+    "lastRun": "2026-03-18T16:43:54.660+01:00"
   }
 }
