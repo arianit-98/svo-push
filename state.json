@@ -28,7 +28,8 @@
     "c1|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDI2|2026-03-15T14:15:00.000+01:00|Sporthalle1 Bönnigheim, Schulstraße, D-74357 Bönnigheim|away": true,
     "c1|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NzkwNDI2|2026-03-15T14:15:00.000+01:00|Sporthalle1 Bönnigheim, Schulstraße, D-74357 Bönnigheim|away": true,
     "herren|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTM2|2026-03-22T16:00:00.000+01:00|Sporthalle, Kleines Feldle, D-71634 Ludwigsburg-Pflugfelden|away": true,
-    "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTM2|2026-03-22T16:00:00.000+01:00|Sporthalle, Kleines Feldle, D-71634 Ludwigsburg-Pflugfelden|away": true
+    "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTM2|2026-03-22T16:00:00.000+01:00|Sporthalle, Kleines Feldle, D-71634 Ludwigsburg-Pflugfelden|away": true,
+    "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTM2|2026-03-22T16:00:00.000+01:00|Sporthalle, Kleines Feldle, D-71634 Ludwigsburg-Pflugfelden|away": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -137,6 +138,6 @@
     }
   },
   "meta": {
-    "lastRun": "2026-03-22T14:51:24.451+01:00"
+    "lastRun": "2026-03-22T15:15:42.621+01:00"
   }
 }
