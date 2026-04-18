@@ -37,7 +37,8 @@
     "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTYx|2026-04-11T15:00:00.000+02:00|Rundsporthalle, Paul-Klee-Straße 11, D-71679 Asperg|away": true,
     "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTYx|2026-04-11T15:00:00.000+02:00|Rundsporthalle, Paul-Klee-Straße 11, D-71679 Asperg|away": true,
     "herren|d4|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTc2|2026-04-18T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTc2|2026-04-18T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
+    "herren|d1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTc2|2026-04-18T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
+    "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTc2|2026-04-18T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -146,6 +147,6 @@
     }
   },
   "meta": {
-    "lastRun": "2026-04-18T16:07:51.194+02:00"
+    "lastRun": "2026-04-18T16:56:08.931+02:00"
   }
 }
