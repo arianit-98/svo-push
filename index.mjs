@@ -327,7 +327,7 @@ async function processAdminQueue(now) {
     const sendAt = DateTime.fromISO(norm(it.sendAt), { zone: TZ });
     const topic = norm(it.topic) || "all";
     const title = norm(it.title);
-    const body = norm(it.body);
+    const body = String(it.body || "").trim(); // Zeilenumbrüche behalten (wie beim Sofort-Senden)
     if (!sendAt.isValid || !title || !body) continue;
 
     const id = it.id || `admin|${sendAt.toISO()}|${title}|${body}`;
