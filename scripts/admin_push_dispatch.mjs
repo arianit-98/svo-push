@@ -1,5 +1,6 @@
 import fs from "fs";
-import admin from "firebase-admin";
+import { initializeApp, cert, getApps } from "firebase-admin/app";
+import { getMessaging } from "firebase-admin/messaging";
 import { DateTime } from "luxon";
 
 const TZ = "Europe/Berlin";
@@ -50,12 +51,12 @@ async function sendNow() {
     Buffer.from(process.env.FIREBASE_SA_B64, "base64").toString("utf8")
   );
 
-  if (!admin.apps.length) {
-    admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+  if (!getApps().length) {
+    initializeApp({ credential: cert(serviceAccount) });
   }
 
   // Send to "all" topic
-  await admin.messaging().send({
+  await getMessaging().send({
     topic: "all",
     notification: { title: TITLE, body: BODY },
     data: { kind: "admin", sentAt: DateTime.now().setZone(TZ).toISO() },

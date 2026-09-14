@@ -1,9 +1,8 @@
 import fs from "fs";
 import dns from "dns";
-import https from "https";
-import axios from "axios";
 import { DateTime } from "luxon";
-import admin from "firebase-admin";
+import { initializeApp, cert } from "firebase-admin/app";
+import { getMessaging } from "firebase-admin/messaging";
 
 const TZ = "Europe/Berlin";
 const STATE_PATH = "./state.json";
@@ -81,21 +80,6 @@ try {
   // älteres Node ignorieren
 }
 
-// https agent mit keepAlive + lookup family=4
-const httpsAgent = new https.Agent({
-  keepAlive: true,
-  lookup: (hostname, options, cb) => dns.lookup(hostname, { ...options, family: 4 }, cb),
-});
-
-const http = axios.create({
-  httpsAgent,
-  timeout: FETCH_TIMEOUT_MS,
-  headers: {
-    "User-Agent": "svo-push-scheduler/1.0 (+github-actions)",
-    "Accept": "application/json,*/*",
-  },
-});
-
 async function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
@@ -104,14 +88,22 @@ async function fetchTextWithRetry(url, attempts = 4) {
   let lastErr = null;
 
   for (let i = 1; i <= attempts; i++) {
+    let status = null;
     try {
-      const res = await http.get(url, { responseType: "text" });
-      return res.data;
+      const res = await fetch(url, {
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+        headers: {
+          "User-Agent": "svo-push-scheduler/1.0 (+github-actions)",
+          "Accept": "application/json,*/*",
+        },
+      });
+      status = res.status;
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.text();
     } catch (e) {
       lastErr = e;
 
-      const code = e?.cause?.code || e?.code || "";
-      const status = e?.response?.status;
+      const code = e?.cause?.code || e?.name || "";
 
       console.log(`Fetch failed (${i}/${attempts}) url=${url} code=${code} status=${status || "-"}`);
 
@@ -131,6 +123,11 @@ async function fetchTextWithRetry(url, attempts = 4) {
 // Sendet nichts, schreibt state.json nicht und braucht keinen Firebase-Key.
 const DRY_RUN = process.env.DRY_RUN === "1";
 
+// ====== Prüfmodus (GitHub: Workflow "Push Scheduler" von Hand mit "validate_only" starten) ======
+// Wie ein echter Lauf mit Firebase-Key, aber Firebase prüft die Nachrichten nur und stellt nichts zu.
+// state.json wird nicht geschrieben, damit nichts fälschlich als verschickt gilt.
+const VALIDATE_ONLY = process.env.FCM_VALIDATE_ONLY === "true" || process.env.FCM_VALIDATE_ONLY === "1";
+
 // ====== Firebase Admin init ======
 if (!DRY_RUN) {
   if (!process.env.FIREBASE_SA_B64) {
@@ -142,8 +139,8 @@ if (!DRY_RUN) {
     Buffer.from(process.env.FIREBASE_SA_B64, "base64").toString("utf8")
   );
 
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+  initializeApp({
+    credential: cert(serviceAccount),
   });
 }
 
@@ -174,7 +171,7 @@ function markSent(id) {
   state.sent[id] = true;
 }
 function saveState() {
-  if (DRY_RUN) return;
+  if (DRY_RUN || VALIDATE_ONLY) return;
   fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
 }
 
@@ -281,9 +278,10 @@ function makeCollapseId(prefix, teamKey, eventKey) {
   return raw.length <= 60 ? raw : raw.slice(0, 60);
 }
 
-async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
+// target: { topic: "..." } oder { condition: "'a' in topics || 'b' in topics" }
+async function sendPush(target, title, body, data = {}, collapseId = null) {
   const msg = {
-    topic,
+    ...target,
     notification: { title, body },
     data: Object.fromEntries(Object.entries(data).map(([k, v]) => [k, String(v)])),
   };
@@ -298,7 +296,18 @@ async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
     return;
   }
 
-  await admin.messaging().send(msg);
+  await getMessaging().send(msg, VALIDATE_ONLY);
+  if (VALIDATE_ONLY) console.log(`[VALIDATE_ONLY] von Firebase akzeptiert, nicht zugestellt: ${JSON.stringify(target)} "${title}"`);
+}
+
+async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
+  await sendPush({ topic }, title, body, data, collapseId);
+}
+
+// Eine Nachricht an alle, die mindestens eines der Topics abonniert haben – jedes Gerät bekommt sie
+// nur einmal (FCM erlaubt bis zu 5 Topics pro Bedingung).
+function anyTopicCondition(topics) {
+  return topics.map((t) => `'${t}' in topics`).join(" || ");
 }
 
 // Catch-up Fenster: statt nur "±WINDOW_MINUTES um fireAt",
@@ -353,6 +362,13 @@ async function processAdminQueue(now) {
 (async () => {
   const now = DateTime.now().setZone(TZ);
   const lookahead = now.plus({ days: LOOKAHEAD_DAYS });
+
+  if (VALIDATE_ONLY) {
+    // Prüft Firebase-Zugang und Nachrichtenformat einmal, auch wenn gerade nichts fällig ist
+    console.log("PRÜFMODUS: Firebase prüft Nachrichten nur, es wird nichts zugestellt und nichts gespeichert.");
+    await sendPush({ topic: "all" }, "Prüfung", "Prüfnachricht (wird nicht zugestellt)", { kind: "validate" });
+    await sendPush({ condition: anyTopicCondition(Object.values(TOPICS.herren)) }, "Prüfung", "Prüfnachricht (Bedingung)", { kind: "validate" });
+  }
 
   // lastRun aus state lesen
   let lastRun = null;
@@ -468,27 +484,26 @@ async function processAdminQueue(now) {
 
             const collapseId = makeCollapseId("reloc", feed.teamKey, eventKey);
 
-            for (const k of ["d4", "d1", "h1"]) {
-              const t = TOPICS[feed.teamKey][k];
-              await sendToTopic(
-                t,
-                title,
-                body,
-                {
-                  kind: "relocation",
-                  team: feed.teamKey,
-                  eventKey,
-                  oldKickoff: prev.kickoff,
-                  newKickoff: currentSnapshot.kickoff,
-                  oldLocation: prev.location || "",
-                  newLocation: currentSnapshot.location || "",
-                  homeAway: currentSnapshot.homeAway,
-                  opponent: currentSnapshot.opponent,
-                  ...linkData(feed),
-                },
-                collapseId
-              );
-            }
+            // Einmal an alle, die das Team in irgendeiner Form abonniert haben (4 Tage/1 Tag/1 Stunde).
+            // Früher ging je eine Nachricht an jedes Topic -> wer alle drei hatte, bekam sie dreifach.
+            await sendPush(
+              { condition: anyTopicCondition(Object.values(TOPICS[feed.teamKey])) },
+              title,
+              body,
+              {
+                kind: "relocation",
+                team: feed.teamKey,
+                eventKey,
+                oldKickoff: prev.kickoff,
+                newKickoff: currentSnapshot.kickoff,
+                oldLocation: prev.location || "",
+                newLocation: currentSnapshot.location || "",
+                homeAway: currentSnapshot.homeAway,
+                opponent: currentSnapshot.opponent,
+                ...linkData(feed),
+              },
+              collapseId
+            );
 
             markSent(relocationId);
           } else {
