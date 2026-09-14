@@ -464,9 +464,17 @@
       "homeAway": "away",
       "opponent": "JSG Tauberfr.",
       "teamKey": "b1"
+    },
+    "aDRhfDkzOTA2NzE": {
+      "kickoff": "2027-03-13T20:00:00.000+01:00",
+      "location": "Verbandssporthalle, Hirnerweg 23, D-74336 Brackenheim",
+      "summary": "HSG Lauff-Nei - SV Obrigheim",
+      "homeAway": "away",
+      "opponent": "HSG Lauff-Nei",
+      "teamKey": "herren"
     }
   },
   "meta": {
-    "lastRun": "2026-09-14T19:16:09.064+02:00"
+    "lastRun": "2026-09-14T20:01:06.823+02:00"
   }
 }
