@@ -4,16 +4,19 @@ import { DateTime } from "luxon";
 
 const TZ = "Europe/Berlin";
 const QUEUE_PATH = "./admin_queue.json";
+const KEEP_DAYS = 7; // bereits fällige Einträge nach 7 Tagen aus der Queue entfernen
 
 const TITLE = (process.env.TITLE || "").trim();
 const BODY = (process.env.BODY || "").trim();
-const SEND_AT = (process.env.SEND_AT || "").trim(); // "YYYY-MM-DDTHH:MM" (Berlin) oder leer
+const SEND_AT = (process.env.SEND_AT || "").trim(); // "YYYY-MM-DDTHH:MM" oder "DD.MM.YYYY HH:MM" (Berlin) oder leer
 
 if (!TITLE || !BODY) {
   console.error("Missing TITLE/BODY");
   process.exit(1);
 }
 
+// admin_queue.json wird nur hier geschrieben. Der Scheduler (index.mjs) liest sie nur und merkt
+// sich Verschicktes in state.json – so kommen sich die beiden Workflows in Git nicht in die Quere.
 function loadQueue() {
   if (!fs.existsSync(QUEUE_PATH)) {
     return { items: [] };
@@ -24,6 +27,15 @@ function loadQueue() {
 }
 function saveQueue(q) {
   fs.writeFileSync(QUEUE_PATH, JSON.stringify(q, null, 2));
+}
+
+function parseSendAt(s) {
+  const formats = ["yyyy-LL-dd'T'HH:mm", "yyyy-LL-dd HH:mm", "dd.LL.yyyy HH:mm", "d.L.yyyy HH:mm"];
+  for (const f of formats) {
+    const dt = DateTime.fromFormat(s, f, { zone: TZ });
+    if (dt.isValid) return dt;
+  }
+  return null;
 }
 
 async function sendNow() {
@@ -58,23 +70,42 @@ async function sendNow() {
   }
 
   // schedule mode: write into queue (scheduler will deliver)
-  const dt = DateTime.fromFormat(SEND_AT, "yyyy-LL-dd'T'HH:mm", { zone: TZ });
-  if (!dt.isValid) {
-    console.error("Invalid SEND_AT. Expected YYYY-MM-DDTHH:MM (Berlin)");
+  const dt = parseSendAt(SEND_AT);
+  if (!dt) {
+    console.error(`Ungültiger Zeitpunkt "${SEND_AT}". Erlaubt: 2026-09-20T17:00 oder 20.09.2026 17:00 (deutsche Zeit)`);
+    process.exit(1);
+  }
+
+  const now = DateTime.now().setZone(TZ);
+  if (dt < now.minus({ minutes: 1 })) {
+    console.error(`Zeitpunkt ${dt.toFormat("dd.LL.yyyy HH:mm")} liegt in der Vergangenheit. Für sofort das Feld leer lassen.`);
     process.exit(1);
   }
 
   const q = loadQueue();
+
+  // Alte, längst fällige Einträge aufräumen
+  const cutoff = now.minus({ days: KEEP_DAYS });
+  q.items = q.items.filter((it) => {
+    const t = DateTime.fromISO(it.sendAt || "", { zone: TZ });
+    return !t.isValid || t > cutoff;
+  });
+
   const id = `admin|${dt.toISO()}|${TITLE}|${BODY}`;
+  if (q.items.some((it) => it.id === id)) {
+    console.log("Dieser Push ist bereits eingeplant:", dt.toISO());
+    return;
+  }
+
   q.items.push({
     id,
     sendAt: dt.toISO(),
     title: TITLE,
     body: BODY,
     topic: "all",
-    createdAt: DateTime.now().setZone(TZ).toISO()
+    createdAt: now.toISO()
   });
 
   saveQueue(q);
-  console.log("✅ Admin push queued for:", dt.toISO());
+  console.log(`✅ Admin push queued for ${dt.toFormat("dd.LL.yyyy HH:mm")} (${dt.toISO()})`);
 })();

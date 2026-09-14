@@ -7,6 +7,8 @@ import admin from "firebase-admin";
 
 const TZ = "Europe/Berlin";
 const STATE_PATH = "./state.json";
+const ADMIN_QUEUE_PATH = "./admin_queue.json";
+const ADMIN_MAX_DELAY_MINUTES = 120; // geplante Admin-Pushes, die mehr als 2h überfällig sind, verfallen
 
 // ====== Scheduler Einstellungen ======
 const WINDOW_MINUTES = 6;      // Toleranz pro Run
@@ -306,6 +308,46 @@ function shouldFire(fireAt, lastRun, now) {
   return fireAt >= lower && fireAt <= upper;
 }
 
+// ====== Geplante Admin-Pushes ======
+// admin_queue.json wird nur vom Workflow "Admin Push" geschrieben (scripts/admin_push_dispatch.mjs)
+// und hier nur gelesen. Was verschickt wurde, steht in state.sent. So schreiben die beiden
+// Workflows nie in dieselbe Datei und es gibt keine Git-Konflikte.
+function loadAdminQueue() {
+  try {
+    const q = JSON.parse(fs.readFileSync(ADMIN_QUEUE_PATH, "utf8"));
+    return Array.isArray(q.items) ? q.items : [];
+  } catch {
+    return [];
+  }
+}
+
+async function processAdminQueue(now) {
+  for (const it of loadAdminQueue()) {
+    const sendAt = DateTime.fromISO(norm(it.sendAt), { zone: TZ });
+    const topic = norm(it.topic) || "all";
+    const title = norm(it.title);
+    const body = norm(it.body);
+    if (!sendAt.isValid || !title || !body) continue;
+
+    const id = it.id || `admin|${sendAt.toISO()}|${title}|${body}`;
+    if (wasSent(id)) continue;
+
+    // Noch nicht dran (höchstens 1 Minute zu früh senden)
+    if (sendAt > now.plus({ minutes: 1 })) continue;
+
+    const delayMinutes = now.diff(sendAt, "minutes").minutes;
+    if (delayMinutes > ADMIN_MAX_DELAY_MINUTES) {
+      console.log(`ADMIN QUEUE: ${Math.round(delayMinutes)} min überfällig, verfällt: ${id}`);
+      state.sent[id] = "expired";
+      continue;
+    }
+
+    console.log(`ADMIN QUEUE: SENDING -> topic=${topic} sendAt=${sendAt.toISO()}`);
+    await sendToTopic(topic, title, body, { kind: "admin", scheduledAt: sendAt.toISO() }, "admin-broadcast");
+    markSent(id);
+  }
+}
+
 // ====== Hauptlauf ======
 (async () => {
   const now = DateTime.now().setZone(TZ);
@@ -347,6 +389,9 @@ function shouldFire(fireAt, lastRun, now) {
       console.log("FORCE_PUSH_AT invalid ISO, skipping force push");
     }
   }
+
+  // 0b) GEPLANTE ADMIN-PUSHES
+  await processAdminQueue(now);
 
   // 1) NORMALER SCHEDULER (Handball4all)
   for (const feed of FEEDS) {

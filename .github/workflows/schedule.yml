@@ -46,8 +46,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # nur die Dateien, die wir wirklich versionieren wollen:
-          git add admin_queue.json state.json || true
+          # nur state.json – admin_queue.json schreibt allein der Workflow "Admin Push"
+          git add state.json
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
@@ -56,5 +56,11 @@ jobs:
 
           git commit -m "Update push state"
 
-          git pull --rebase origin main
-          git push origin main
+          # Admin Push committet parallel admin_queue.json – bei Konflikt neu aufsetzen und nochmal.
+          # Geht das schief, würden bereits verschickte Pushes beim nächsten Lauf erneut gesendet.
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push origin main && exit 0
+            git rebase --abort 2>/dev/null || true
+            sleep $((i * 3))
+          done
+          exit 1
