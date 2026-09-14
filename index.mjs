@@ -25,11 +25,20 @@ const H4A_URL = "https://spo.handball4all.de/service/if_g_json.php";
 const FEEDS = [
   {
     teamKey: "herren",
-    teamLabel: "Herren",
+    teamLabel: "Herren 1",
     clubShort: "SVO",
     org: 216,          // Baden-Württembergischer Handball-Verband
     classId: 161161,   // Männer-Landesliga Staffel 1, Saison 26/27
-    teamMatch: "Obrigheim",
+    teamMatch: "SV Obrigheim",
+    deeplink: "https://svohandball.de/de/mannschaften/1-mannschaft/",
+  },
+  {
+    teamKey: "herren2",
+    teamLabel: "Herren 2",
+    clubShort: "SVO 2",
+    org: 216,
+    classId: 161571,   // Männer 2. Bezirksklasse Gruppe 1, Saison 26/27
+    teamMatch: "SV Obrigheim 2",
     deeplink: "https://svohandball.de/de/mannschaften/1-mannschaft/",
   },
   {
@@ -55,6 +64,7 @@ const FEEDS = [
 // Topics pro Team + Offset (muss zu push.php auf svohandball.de passen)
 const TOPICS = {
   herren: { d4: "team_herren_d4", d1: "team_herren_d1", h1: "team_herren_h1" },
+  herren2: { d4: "team_herren2_d4", d1: "team_herren2_d1", h1: "team_herren2_h1" },
   c1:     { d4: "team_c1_d4",     d1: "team_c1_d1",     h1: "team_c1_h1" },
   b1:     { d4: "team_b1_d4",     d1: "team_b1_d1",     h1: "team_b1_h1" },
 };
