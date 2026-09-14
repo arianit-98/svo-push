@@ -144,9 +144,329 @@
       "homeAway": "away",
       "opponent": "TSV Bönnigheim",
       "teamKey": "c1"
+    },
+    "aDRhfDkzOTAyMTE": {
+      "kickoff": "2026-09-20T18:00:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim - Bottwar SG 2",
+      "homeAway": "home",
+      "opponent": "Bottwar SG 2",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTAyNjE": {
+      "kickoff": "2026-10-04T18:00:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim - TSV Weinsberg 2",
+      "homeAway": "home",
+      "opponent": "TSV Weinsberg 2",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTAyODE": {
+      "kickoff": "2026-10-10T19:00:00.000+02:00",
+      "location": "Sporthalle in der Au, Beihinger Straße 70, D-71726 Benningen",
+      "summary": "Team Neckar - SV Obrigheim",
+      "homeAway": "away",
+      "opponent": "Team Neckar",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTAzMDE": {
+      "kickoff": "2026-10-18T18:00:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim - HSG Hohenlohe",
+      "homeAway": "home",
+      "opponent": "HSG Hohenlohe",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTAzMjE": {
+      "kickoff": "2026-10-25T15:00:00.000+01:00",
+      "location": "Sporthalle, Uhlandstraße, D-74229 Oedheim",
+      "summary": "SG Degm-Oedh - SV Obrigheim",
+      "homeAway": "away",
+      "opponent": "SG Degm-Oedh",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTAzNDE": {
+      "kickoff": "2026-11-01T18:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim - HSG Lauff-Nei",
+      "homeAway": "home",
+      "opponent": "HSG Lauff-Nei",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTAyMzY": {
+      "kickoff": "2026-11-14T20:00:00.000+01:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "HA Neckarelz - SV Obrigheim",
+      "homeAway": "away",
+      "opponent": "HA Neckarelz",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTA0MjE": {
+      "kickoff": "2026-11-22T18:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim - SG SchoBott 2",
+      "homeAway": "home",
+      "opponent": "SG SchoBott 2",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTA0NTE": {
+      "kickoff": "2026-11-28T18:00:00.000+01:00",
+      "location": "Stadionhalle, Ludwigsburger Straße 70, D-71696 Möglingen",
+      "summary": "HSG Leudelsb. - SV Obrigheim",
+      "homeAway": "away",
+      "opponent": "HSG Leudelsb.",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTA0ODE": {
+      "kickoff": "2026-12-04T20:30:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim - SV K'westheim 2",
+      "homeAway": "home",
+      "opponent": "SV K'westheim 2",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTA1MTE": {
+      "kickoff": "2026-12-12T20:00:00.000+01:00",
+      "location": "Sport- und Spielhalle, Dr.-Fritz-Schmitt-Ring, D-74722 Buchen",
+      "summary": "TSV Buchen - SV Obrigheim",
+      "homeAway": "away",
+      "opponent": "TSV Buchen",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTA1NDE": {
+      "kickoff": "2026-12-20T15:00:00.000+01:00",
+      "location": "Riedhalle, Höpfigheimer Straße 54, D-71711 Steinheim/Murr",
+      "summary": "Bottwar SG 2 - SV Obrigheim",
+      "homeAway": "away",
+      "opponent": "Bottwar SG 2",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTA3ODE": {
+      "kickoff": "2027-01-10T18:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim - HSG Leudelsb.",
+      "homeAway": "home",
+      "opponent": "HSG Leudelsb.",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTA1NjY": {
+      "kickoff": "2027-01-23T18:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim - HA Neckarelz",
+      "homeAway": "home",
+      "opponent": "HA Neckarelz",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTA1OTE": {
+      "kickoff": "2027-02-13T17:30:00.000+01:00",
+      "location": "Weibertreuhalle, Rossäckerstraße, D-74189 Weinsberg",
+      "summary": "TSV Weinsberg 2 - SV Obrigheim",
+      "homeAway": "away",
+      "opponent": "TSV Weinsberg 2",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTA2MTE": {
+      "kickoff": "2027-02-21T18:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim - Team Neckar",
+      "homeAway": "home",
+      "opponent": "Team Neckar",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTA2MzE": {
+      "kickoff": "2027-02-27T20:00:00.000+01:00",
+      "location": "Creutzfelder Sporthalle, Pestalozzistraße 20, D-74629 Pfedelbach",
+      "summary": "HSG Hohenlohe - SV Obrigheim",
+      "homeAway": "away",
+      "opponent": "HSG Hohenlohe",
+      "teamKey": "herren"
+    },
+    "aDRhfDkzOTA2NTE": {
+      "kickoff": "2027-03-07T18:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim - SG Degm-Oedh",
+      "homeAway": "home",
+      "opponent": "SG Degm-Oedh",
+      "teamKey": "herren"
+    },
+    "aDRhfDk1OTIxODE": {
+      "kickoff": "2026-09-26T15:40:00.000+02:00",
+      "location": "Kraichgauhalle, Wagnerstraße 9, D-74906 Bad Rappenau",
+      "summary": "HSG Wim/Biber 2 - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "HSG Wim/Biber 2",
+      "teamKey": "c1"
+    },
+    "aDRhfDk1OTIyMDE": {
+      "kickoff": "2026-10-04T16:15:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig - TV Mosbach",
+      "homeAway": "home",
+      "opponent": "TV Mosbach",
+      "teamKey": "c1"
+    },
+    "aDRhfDk1OTIyMjE": {
+      "kickoff": "2026-10-18T14:25:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig - TV Hardheim",
+      "homeAway": "home",
+      "opponent": "TV Hardheim",
+      "teamKey": "c1"
+    },
+    "aDRhfDk1OTIyNzE": {
+      "kickoff": "2026-11-14T14:15:00.000+01:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "JSG Neck-Obrig - JH Flein-Hork 2",
+      "homeAway": "home",
+      "opponent": "JH Flein-Hork 2",
+      "teamKey": "c1"
+    },
+    "aDRhfDk1OTIyNTE": {
+      "kickoff": "2026-11-28T13:30:00.000+01:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "JSG Neck-Obrig - HSG Heilbronn",
+      "homeAway": "home",
+      "opponent": "HSG Heilbronn",
+      "teamKey": "c1"
+    },
+    "aDRhfDk1OTIzNzY": {
+      "kickoff": "2026-12-12T13:00:00.000+01:00",
+      "location": "Stauwehrhalle, Nussäckerstraße, D-74081 Heilbronn-Horkheim",
+      "summary": "JH Flein-Hork 2 - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "JH Flein-Hork 2",
+      "teamKey": "c1"
+    },
+    "aDRhfDk1OTIyMjY": {
+      "kickoff": "2027-01-10T14:00:00.000+01:00",
+      "location": "Grünewaldhalle, Vitryallee 7, D-97941 Tauberbischofsheim",
+      "summary": "JSG Tauberfr. - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "JSG Tauberfr.",
+      "teamKey": "c1"
+    },
+    "aDRhfDk1OTIyODY": {
+      "kickoff": "2027-01-23T14:15:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig - HSG Wim/Biber 2",
+      "homeAway": "home",
+      "opponent": "HSG Wim/Biber 2",
+      "teamKey": "c1"
+    },
+    "aDRhfDk1OTIzMDY": {
+      "kickoff": "2027-01-30T16:30:00.000+01:00",
+      "location": "Jahnhalle, Hammerweg 7, D-74821 Mosbach",
+      "summary": "TV Mosbach - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "TV Mosbach",
+      "teamKey": "c1"
+    },
+    "aDRhfDk1OTIzMjY": {
+      "kickoff": "2027-02-28T14:20:00.000+01:00",
+      "location": "Walter-Hohmann-Schulsporthalle, Bürgermeister-Henn-Straße, D-74736 Hardheim",
+      "summary": "TV Hardheim - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "TV Hardheim",
+      "teamKey": "c1"
+    },
+    "aDRhfDk1OTIzMzE": {
+      "kickoff": "2027-03-07T14:15:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig - JSG Tauberfr.",
+      "homeAway": "home",
+      "opponent": "JSG Tauberfr.",
+      "teamKey": "c1"
+    },
+    "aDRhfDk1OTA3NzE": {
+      "kickoff": "2026-09-27T16:00:00.000+02:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "JSG Neck-Obrig - TV Mosbach",
+      "homeAway": "home",
+      "opponent": "TV Mosbach",
+      "teamKey": "b1"
+    },
+    "aDRhfDk1OTA4NDY": {
+      "kickoff": "2026-11-07T16:15:00.000+01:00",
+      "location": "SportCentrum, August-Thalheimer-Straße, D-74182 Obersulm",
+      "summary": "TSV Willsbach - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "TSV Willsbach",
+      "teamKey": "b1"
+    },
+    "aDRhfDk1OTA4NTY": {
+      "kickoff": "2026-11-14T12:30:00.000+01:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "JSG Neck-Obrig - TSG Schw.Hall",
+      "homeAway": "home",
+      "opponent": "TSG Schw.Hall",
+      "teamKey": "b1"
+    },
+    "aDRhfDk1OTA4MjE": {
+      "kickoff": "2026-11-22T17:00:00.000+01:00",
+      "location": "Hohenlohe-Halle, Pfaffenmühlweg, D-74613 Öhringen",
+      "summary": "HSG Hohenlohe 2 - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "HSG Hohenlohe 2",
+      "teamKey": "b1"
+    },
+    "aDRhfDk1OTA4MjY": {
+      "kickoff": "2026-11-28T11:45:00.000+01:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "JSG Neck-Obrig - JSG Tauberfr.",
+      "homeAway": "home",
+      "opponent": "JSG Tauberfr.",
+      "teamKey": "b1"
+    },
+    "aDRhfDk1OTA5NjE": {
+      "kickoff": "2026-12-05T16:15:00.000+01:00",
+      "location": "Schenkenseehalle 1, Schenkenseestraße, D-74523 Schwäbisch Hall",
+      "summary": "TSG Schw.Hall - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "TSG Schw.Hall",
+      "teamKey": "b1"
+    },
+    "aDRhfDk1OTA4NzY": {
+      "kickoff": "2026-12-12T14:15:00.000+01:00",
+      "location": "Jahnhalle, Hammerweg 7, D-74821 Mosbach",
+      "summary": "TV Mosbach - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "TV Mosbach",
+      "teamKey": "b1"
+    },
+    "aDRhfDk1OTA4MDE": {
+      "kickoff": "2027-02-20T14:00:00.000+01:00",
+      "location": "Sporthalle, Uhlandstraße, D-74229 Oedheim",
+      "summary": "JSG Kochertal - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "JSG Kochertal",
+      "teamKey": "b1"
+    },
+    "aDRhfDk1OTA5MDY": {
+      "kickoff": "2027-02-27T14:00:00.000+01:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "JSG Neck-Obrig - JSG Kochertal",
+      "homeAway": "home",
+      "opponent": "JSG Kochertal",
+      "teamKey": "b1"
+    },
+    "aDRhfDk1OTA5MjY": {
+      "kickoff": "2027-03-07T16:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig - HSG Hohenlohe 2",
+      "homeAway": "home",
+      "opponent": "HSG Hohenlohe 2",
+      "teamKey": "b1"
+    },
+    "aDRhfDk1OTA5MzE": {
+      "kickoff": "2027-03-13T17:00:00.000+01:00",
+      "location": "Grünewaldhalle, Vitryallee 7, D-97941 Tauberbischofsheim",
+      "summary": "JSG Tauberfr. - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "JSG Tauberfr.",
+      "teamKey": "b1"
     }
   },
   "meta": {
-    "lastRun": "2026-09-14T18:33:15.096+02:00"
+    "lastRun": "2026-09-14T19:16:09.064+02:00"
   }
 }
