@@ -12,7 +12,7 @@ on:
         required: true
         type: string
       send_at:
-        description: "Optional: schedule time (YYYY-MM-DDTHH:MM) in Europe/Berlin. Empty = send now."
+        description: "Optional: Zeitpunkt (deutsche Zeit), z.B. 20.09.2026 17:00 oder 2026-09-20T17:00. Leer = sofort senden."
         required: false
         type: string
 
@@ -34,10 +34,14 @@ jobs:
       - name: Install deps
         run: npm ci
 
+      # Eingaben nur über env verwenden – direkt im Skript eingesetzt würde z.B. ein " im Titel
+      # den Schritt abbrechen (bzw. Shell-Befehle ausführen).
       - name: Validate inputs
+        env:
+          TITLE: ${{ inputs.title }}
+          BODY: ${{ inputs.body }}
         run: |
-          echo "TITLE=${{ inputs.title }}" | wc -c
-          echo "BODY=${{ inputs.body }}" | wc -c
+          echo "Titel: ${#TITLE} Zeichen, Text: ${#BODY} Zeichen"
 
       - name: Send now OR enqueue
         env:
@@ -59,4 +63,11 @@ jobs:
 
           git add admin_queue.json
           git commit -m "Admin push queued"
-          git push
+
+          # Der Scheduler committet parallel state.json – bei Konflikt neu aufsetzen und nochmal
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push origin main && exit 0
+            git rebase --abort 2>/dev/null || true
+            sleep $((i * 3))
+          done
+          exit 1
