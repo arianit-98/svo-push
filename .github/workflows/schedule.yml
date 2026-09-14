@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: "*/5 * * * *"   # alle 5 Minuten
   workflow_dispatch:
+    inputs:
+      validate_only:
+        description: "Prüfmodus: Firebase prüft die Nachrichten nur, es wird nichts zugestellt und nichts gespeichert"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -18,15 +24,15 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           persist-credentials: true
           fetch-depth: 0
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "npm"
 
       - name: Install deps
@@ -39,6 +45,7 @@ jobs:
           FORCE_PUSH_TOPIC: ${{ secrets.FORCE_PUSH_TOPIC }}
           FORCE_PUSH_TITLE: ${{ secrets.FORCE_PUSH_TITLE }}
           FORCE_PUSH_BODY: ${{ secrets.FORCE_PUSH_BODY }}
+          FCM_VALIDATE_ONLY: ${{ inputs.validate_only }}
         run: node index.mjs
 
       - name: Commit updated state/admin queue (only)

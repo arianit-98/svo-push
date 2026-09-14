@@ -1,14 +1,15 @@
-import admin from "firebase-admin";
+import { initializeApp, cert } from "firebase-admin/app";
+import { getMessaging } from "firebase-admin/messaging";
 
 const serviceAccount = JSON.parse(
   Buffer.from(process.env.FIREBASE_SA_B64, "base64").toString("utf8")
 );
 
-admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+initializeApp({ credential: cert(serviceAccount) });
 
 const topic = process.env.TOPIC || "team_herren_h1";
 
-await admin.messaging().send({
+await getMessaging().send({
   topic,
   notification: {
     title: "SVO Push Test ✅",
