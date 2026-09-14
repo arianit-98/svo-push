@@ -5,6 +5,7 @@ import { DateTime } from "luxon";
 const TZ = "Europe/Berlin";
 const QUEUE_PATH = "./admin_queue.json";
 const KEEP_DAYS = 7; // bereits fällige Einträge nach 7 Tagen aus der Queue entfernen
+const MAX_LATE_MINUTES = 120; // wie ADMIN_MAX_DELAY_MINUTES in index.mjs
 
 const TITLE = (process.env.TITLE || "").trim();
 const BODY = (process.env.BODY || "").trim();
@@ -35,7 +36,9 @@ function parseSendAt(s) {
     const dt = DateTime.fromFormat(s, f, { zone: TZ });
     if (dt.isValid) return dt;
   }
-  return null;
+  // z.B. mit Sekunden oder Zeitzone: "2026-09-20T17:00:00", "2026-09-20T17:00+02:00"
+  const iso = DateTime.fromISO(s, { zone: TZ });
+  return iso.isValid ? iso : null;
 }
 
 async function sendNow() {
@@ -76,10 +79,19 @@ async function sendNow() {
     process.exit(1);
   }
 
+  // Schon vorbei (z.B. im Formular auf admin-push.php "in 1 Minute" gewählt und etwas gebraucht):
+  // bis 2h sofort senden, älter ist sicher ein Tippfehler. Ein Fehler hier wäre auf admin-push.php
+  // unsichtbar – die Seite meldet Erfolg, sobald GitHub den Workflow angenommen hat.
   const now = DateTime.now().setZone(TZ);
-  if (dt < now.minus({ minutes: 1 })) {
-    console.error(`Zeitpunkt ${dt.toFormat("dd.LL.yyyy HH:mm")} liegt in der Vergangenheit. Für sofort das Feld leer lassen.`);
+  const lateMinutes = now.diff(dt, "minutes").minutes;
+  if (lateMinutes > MAX_LATE_MINUTES) {
+    console.error(`Zeitpunkt ${dt.toFormat("dd.LL.yyyy HH:mm")} liegt mehr als 2 Stunden in der Vergangenheit. Für sofort das Feld leer lassen.`);
     process.exit(1);
+  }
+  if (lateMinutes > 0) {
+    console.log(`Zeitpunkt ${dt.toFormat("dd.LL.yyyy HH:mm")} ist schon vorbei – wird sofort gesendet.`);
+    await sendNow();
+    return;
   }
 
   const q = loadQueue();
