@@ -1,0 +1,54 @@
+name: Test Push
+
+# Schickt eine Test-Nachricht nur an ein Test-Topic (Standard: svo_test), nicht an die Nutzer.
+# Ein Testgerät muss dieses Topic abonniert haben.
+
+on:
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: "Test-Topic (muss mit svo_test beginnen)"
+        required: true
+        default: "svo_test"
+        type: string
+      title:
+        description: "Titel"
+        required: true
+        default: "SVO Push Test ✅"
+        type: string
+      body:
+        description: "Text"
+        required: true
+        default: "Wenn du das siehst, funktioniert GitHub → Firebase → Handy."
+        type: string
+      deeplink:
+        description: "Optional: Link, der beim Antippen geöffnet wird (https://svohandball.de/...)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  test_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Send test push
+        env:
+          FIREBASE_SA_B64: ${{ secrets.FIREBASE_SA_B64 }}
+          TOPIC: ${{ inputs.topic }}
+          TITLE: ${{ inputs.title }}
+          BODY: ${{ inputs.body }}
+          DEEPLINK: ${{ inputs.deeplink }}
+        run: node test-push.mjs
