@@ -237,10 +237,11 @@ async function loadGames(feed) {
   return games;
 }
 
-// "deeplink" liest die App (ab Version 1.1) nativ aus,
-// "url" liest das JS auf svohandball.de (pushNotificationActionPerformed) – für ältere App-Versionen.
+// "deeplink" öffnet die App (ab Version 1.1) nativ. Bewusst kein "url"-Feld mehr: das hat der alte
+// pushNotificationActionPerformed-Listener auf der Startseite gelesen und konnte so später
+// nochmal zur Seite einer alten Push springen.
 function linkData(feed) {
-  return { deeplink: feed.deeplink, url: feed.deeplink };
+  return { deeplink: feed.deeplink };
 }
 
 function formatTime(dt) {
