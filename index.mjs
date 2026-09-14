@@ -2,7 +2,6 @@ import fs from "fs";
 import dns from "dns";
 import https from "https";
 import axios from "axios";
-import ical from "node-ical";
 import { DateTime } from "luxon";
 import admin from "firebase-admin";
 
@@ -14,28 +13,49 @@ const WINDOW_MINUTES = 6;      // Toleranz pro Run
 const LOOKAHEAD_DAYS = 180;    // wie weit voraus wir Spiele betrachten
 const FETCH_TIMEOUT_MS = 15000;
 
-// Teams / ICS-Feeds
+// Teams / Handball4all-Ligen
+// Die handball.net-ICS-Feeds gibt es nicht mehr (404). Wir holen den Spielplan der Liga direkt
+// von Handball4all – dieselbe Quelle wie h4a-proxy.php auf svohandball.de.
+// ⚠️ Die Liga-ID (classId) ändert sich jede Saison und muss dann hier aktualisiert werden.
+//    classId steht in der Spielplan-URL auf handball4all.de (Parameter "cl").
+// teamMatch: Teil des Mannschaftsnamens, wie er in gHomeTeam/gGuestTeam steht.
+const H4A_URL = "https://spo.handball4all.de/service/if_g_json.php";
+
 const FEEDS = [
   {
     teamKey: "herren",
     teamLabel: "Herren",
     clubShort: "SVO",
-    homeVenueHints: ["Obrigheim", "Neckarhalle"],
-    ics: "https://handball.net/a/sportdata/1/calendar/team/handball4all.baden-wuerttemberg.1325866.ics",
+    org: 216,          // Baden-Württembergischer Handball-Verband
+    classId: 161161,   // Männer-Landesliga Staffel 1, Saison 26/27
+    teamMatch: "Obrigheim",
+    deeplink: "https://svohandball.de/de/mannschaften/1-mannschaft/",
   },
   {
-    teamKey: "c1",
-    teamLabel: "C1-Jugend",
+    teamKey: "c1",     // Key bleibt "c1", damit bestehende Abos (team_c1_*) weiter funktionieren
+    teamLabel: "C-Jugend",
     clubShort: "JSG",
-    homeVenueHints: ["Obrigheim", "Neckarhalle"],
-    ics: "https://handball.net/a/sportdata/1/calendar/team/handball4all.baden-wuerttemberg.1345071.ics",
+    org: 216,
+    classId: 165801,   // mC-Jugend Bezirksklasse Gruppe 1, Saison 26/27
+    teamMatch: "Neck-Obrig",   // "JSG Neck-Obrig"
+    deeplink: "https://svohandball.de/de/mannschaften/c-jugend/",
+  },
+  {
+    teamKey: "b1",
+    teamLabel: "B-Jugend",
+    clubShort: "JSG",
+    org: 216,
+    classId: 165711,   // mB-Jugend Bezirksliga Gruppe 1, Saison 26/27
+    teamMatch: "Neck-Obrig",
+    deeplink: "https://svohandball.de/de/mannschaften/B-Jugend/",
   },
 ];
 
-// Topics pro Team + Offset
+// Topics pro Team + Offset (muss zu push.php auf svohandball.de passen)
 const TOPICS = {
   herren: { d4: "team_herren_d4", d1: "team_herren_d1", h1: "team_herren_h1" },
   c1:     { d4: "team_c1_d4",     d1: "team_c1_d1",     h1: "team_c1_h1" },
+  b1:     { d4: "team_b1_d4",     d1: "team_b1_d1",     h1: "team_b1_h1" },
 };
 
 // Offsets (Presets)
@@ -70,7 +90,7 @@ const http = axios.create({
   timeout: FETCH_TIMEOUT_MS,
   headers: {
     "User-Agent": "svo-push-scheduler/1.0 (+github-actions)",
-    "Accept": "text/calendar,text/plain,*/*",
+    "Accept": "application/json,*/*",
   },
 });
 
@@ -105,19 +125,25 @@ async function fetchTextWithRetry(url, attempts = 4) {
   throw lastErr;
 }
 
+// ====== Dry-Run (lokal testen: DRY_RUN=1 node index.mjs) ======
+// Sendet nichts, schreibt state.json nicht und braucht keinen Firebase-Key.
+const DRY_RUN = process.env.DRY_RUN === "1";
+
 // ====== Firebase Admin init ======
-if (!process.env.FIREBASE_SA_B64) {
-  console.error("Missing env FIREBASE_SA_B64");
-  process.exit(1);
+if (!DRY_RUN) {
+  if (!process.env.FIREBASE_SA_B64) {
+    console.error("Missing env FIREBASE_SA_B64");
+    process.exit(1);
+  }
+
+  const serviceAccount = JSON.parse(
+    Buffer.from(process.env.FIREBASE_SA_B64, "base64").toString("utf8")
+  );
+
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
 }
-
-const serviceAccount = JSON.parse(
-  Buffer.from(process.env.FIREBASE_SA_B64, "base64").toString("utf8")
-);
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
 
 // ====== State laden ======
 let state = { sent: {}, events: {}, meta: {} };
@@ -134,6 +160,11 @@ if (fs.existsSync(STATE_PATH)) {
   fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
 }
 
+function contentSnapshot() {
+  return JSON.stringify({ sent: state.sent, events: state.events });
+}
+const initialSnapshot = contentSnapshot();
+
 function wasSent(id) {
   return !!state.sent[id];
 }
@@ -141,6 +172,7 @@ function markSent(id) {
   state.sent[id] = true;
 }
 function saveState() {
+  if (DRY_RUN) return;
   fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
 }
 
@@ -151,85 +183,62 @@ function containsIgnoreCase(haystack, needle) {
   return (haystack || "").toLowerCase().includes((needle || "").toLowerCase());
 }
 
-function cleanupTeamName(name) {
-  return norm(name)
-    .replace(/\s{2,}/g, " ")
-    .replace(/^-\s*/, "")
-    .replace(/\s*-\s*$/, "");
-}
+// Spielplan einer Liga von Handball4all laden und auf unsere Spiele filtern.
+// Liefert [{ uid, start, summary, location, homeAway, opponent }]
+async function loadGames(feed) {
+  const url = `${H4A_URL}?cmd=ps&og=${feed.org}&cl=${feed.classId}&ca=1`;
+  const text = await fetchTextWithRetry(url, 4);
 
-function splitMatchup(summary) {
-  const s = norm(summary);
-  if (!s) return null;
-
-  const splitters = [" - ", " vs. ", " vs ", " VS ", " : "];
-  for (const sp of splitters) {
-    if (s.includes(sp)) {
-      const parts = s.split(sp).map(norm);
-      if (parts.length >= 2) return { left: parts[0], right: parts[1] };
-    }
-  }
-  return null;
-}
-
-function isHomeByVenue(location, homeHints = []) {
-  const loc = norm(location);
-  if (!loc) return false;
-  return homeHints.some((h) => containsIgnoreCase(loc, h));
-}
-
-function determineHomeAway(feed, summary, location) {
-  const matchup = splitMatchup(summary);
-  const club = feed.clubShort;
-
-  if (matchup) {
-    const leftHasClub =
-      containsIgnoreCase(matchup.left, club) ||
-      containsIgnoreCase(matchup.left, "SVO") ||
-      containsIgnoreCase(matchup.left, "Obrigheim");
-    const rightHasClub =
-      containsIgnoreCase(matchup.right, club) ||
-      containsIgnoreCase(matchup.right, "SVO") ||
-      containsIgnoreCase(matchup.right, "Obrigheim");
-
-    if (leftHasClub && !rightHasClub) return "home";
-    if (rightHasClub && !leftHasClub) return "away";
+  const data = typeof text === "string" ? JSON.parse(text) : text;
+  const content = Array.isArray(data) ? data[0]?.content : null;
+  if (!content) {
+    // z.B. {"status":-1,"statusText":"permission denied"}
+    throw new Error(`Unexpected H4A response: ${String(text).slice(0, 120)}`);
   }
 
-  if (isHomeByVenue(location, feed.homeVenueHints)) return "home";
-  return "away";
-}
+  const all = [...(content.actualGames?.games || []), ...(content.futureGames?.games || [])];
 
-function extractOpponentName(feed, summary, homeAway) {
-  const matchup = splitMatchup(summary);
-  const club = feed.clubShort;
+  const seen = new Set();
+  const games = [];
 
-  if (matchup) {
-    const left = cleanupTeamName(matchup.left);
-    const right = cleanupTeamName(matchup.right);
+  for (const g of all) {
+    const homeTeam = norm(g.gHomeTeam);
+    const guestTeam = norm(g.gGuestTeam);
+    const isHome = containsIgnoreCase(homeTeam, feed.teamMatch);
+    const isGuest = containsIgnoreCase(guestTeam, feed.teamMatch);
+    if (!isHome && !isGuest) continue;
 
-    if (homeAway === "home") {
-      return (
-        cleanupTeamName(
-          right
-            .replace(new RegExp(club, "ig"), "")
-            .replace(/SVO/gi, "")
-            .replace(/Obrigheim/gi, "")
-        ).trim() || right
-      );
-    } else {
-      return (
-        cleanupTeamName(
-          left
-            .replace(new RegExp(club, "ig"), "")
-            .replace(/SVO/gi, "")
-            .replace(/Obrigheim/gi, "")
-        ).trim() || left
-      );
-    }
+    const id = norm(g.gID) || norm(g.gNo);
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+
+    // gDate "20.09.26", gTime "18:00" (Ortszeit). Spiele ohne feste Anwurfzeit überspringen.
+    const start = DateTime.fromFormat(`${norm(g.gDate)} ${norm(g.gTime)}`, "dd.LL.yy HH:mm", { zone: TZ });
+    if (!start.isValid) continue;
+
+    // Gleiches Format wie früher im ICS: "Neckarhalle, Am Park 8, D-74847 Obrigheim"
+    const town = [norm(g.gGymnasiumPostal) && `D-${norm(g.gGymnasiumPostal)}`, norm(g.gGymnasiumTown)]
+      .filter(Boolean)
+      .join(" ");
+    const location = [norm(g.gGymnasiumName), norm(g.gGymnasiumStreet), town].filter(Boolean).join(", ");
+
+    games.push({
+      uid: `h4a|${id}`,
+      start,
+      summary: `${homeTeam} - ${guestTeam}`,
+      location,
+      homeAway: isHome ? "home" : "away",
+      opponent: isHome ? guestTeam : homeTeam,
+    });
   }
 
-  return cleanupTeamName(summary);
+  return games;
+}
+
+// "deeplink" liest die App (ab Version 1.1) nativ aus,
+// "url" liest das JS auf svohandball.de (pushNotificationActionPerformed) – für ältere App-Versionen.
+function linkData(feed) {
+  return { deeplink: feed.deeplink, url: feed.deeplink };
 }
 
 function formatTime(dt) {
@@ -279,6 +288,11 @@ async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
   if (collapseId) {
     msg.android = { notification: { tag: collapseId } };
     msg.apns = { headers: { "apns-collapse-id": collapseId } };
+  }
+
+  if (DRY_RUN) {
+    console.log(`[DRY_RUN] ${JSON.stringify(msg)}`);
+    return;
   }
 
   await admin.messaging().send(msg);
@@ -334,38 +348,35 @@ function shouldFire(fireAt, lastRun, now) {
     }
   }
 
-  // 1) NORMALER SCHEDULER (ICS)
+  // 1) NORMALER SCHEDULER (Handball4all)
   for (const feed of FEEDS) {
-    console.log(`Loading ICS for ${feed.teamKey}...`);
-
-    let cal;
-    try {
-      const icsText = await fetchTextWithRetry(feed.ics, 4);
-      cal = ical.parseICS(icsText);
-    } catch (e) {
-      // WICHTIG: nicht den ganzen Run killen (sonst bleiben auch andere Teams/State stehen)
-      const code = e?.cause?.code || e?.code || "";
-      console.log(`WARN: Failed to load ICS for ${feed.teamKey}. code=${code}. Will try again next run.`);
+    if (!feed.classId) {
+      console.log(`WARN: No classId configured for ${feed.teamKey}, skipping.`);
       continue;
     }
 
-    for (const item of Object.values(cal)) {
-      if (!item || item.type !== "VEVENT" || !item.start) continue;
+    console.log(`Loading H4A games for ${feed.teamKey} (class ${feed.classId})...`);
 
-      const start = DateTime.fromJSDate(item.start, { zone: TZ });
-      const summary = norm(item.summary || "Spiel");
-      const location = norm(item.location || "");
-      const uid = norm(item.uid || "");
+    let games;
+    try {
+      games = await loadGames(feed);
+    } catch (e) {
+      // WICHTIG: nicht den ganzen Run killen (sonst bleiben auch andere Teams/State stehen)
+      const code = e?.cause?.code || e?.code || e?.message || "";
+      console.log(`WARN: Failed to load games for ${feed.teamKey}. code=${code}. Will try again next run.`);
+      continue;
+    }
+
+    console.log(`  ${games.length} games found for ${feed.teamKey}`);
+
+    for (const game of games) {
+      const { start, summary, location, uid, homeAway, opponent } = game;
 
       if (start < now.minus({ hours: 6 })) continue;
       if (start > lookahead) continue;
 
-      const homeAway = determineHomeAway(feed, summary, location);
-      const opponent = extractOpponentName(feed, summary, homeAway);
-
       // Event-Key
-      const baseKey = uid || `${feed.teamKey}|${formatDate(start)}|${summary}`;
-      const eventKey = Buffer.from(baseKey).toString("base64url");
+      const eventKey = Buffer.from(uid).toString("base64url");
 
       const prev = state.events[eventKey];
       const currentSnapshot = {
@@ -427,11 +438,7 @@ function shouldFire(fireAt, lastRun, now) {
                   newLocation: currentSnapshot.location || "",
                   homeAway: currentSnapshot.homeAway,
                   opponent: currentSnapshot.opponent,
-                  deeplink:
-                      feed.teamKey === "herren"
-                      ? "https://svohandball.de/de/mannschaften/1-mannschaft/"
-                      : "https://svohandball.de/de/mannschaften/c-jugend/",
-
+                  ...linkData(feed),
                 },
                 collapseId
               );
@@ -455,6 +462,9 @@ function shouldFire(fireAt, lastRun, now) {
       };
 
       // --- Normale Reminder Pushes (d4/d1/h1) ---
+      // GitHub startet den Cron oft stundenlang verspätet – eine Erinnerung nach Anpfiff ist sinnlos.
+      if (start <= now) continue;
+
       for (const off of OFFSETS) {
         const fireAt = start.minus(off.minus);
 
@@ -469,34 +479,36 @@ function shouldFire(fireAt, lastRun, now) {
         const body = makeBody(feed, homeAway, opponent, start, location);
 
         console.log(`SENDING -> topic=${topic} id=${id} fireAt=${fireAt.toISO()}`);
-      
-        const deeplink =
-          feed.teamKey === "herren"
-          ? "https://svohandball.de/de/mannschaften/1-mannschaft/"
-          : "https://svohandball.de/de/mannschaften/c-jugend/";
 
-      await sendToTopic(topic, title, body, {
-        kind: "match",
-        team: feed.teamKey,
-        offset: off.key,
-        eventKey,
-        kickoff: start.toISO(),
-        homeAway,
-        opponent,
-        location,
-        summary,
-        deeplink,
-      });
-
+        await sendToTopic(topic, title, body, {
+          kind: "match",
+          team: feed.teamKey,
+          offset: off.key,
+          eventKey,
+          kickoff: start.toISO(),
+          homeAway,
+          opponent,
+          location,
+          summary,
+          ...linkData(feed),
+        });
 
         markSent(id);
       }
     }
   }
 
-  // lastRun aktualisieren
-  state.meta.lastRun = now.toISO();
-  saveState();
+  // lastRun aktualisieren – aber nur speichern (= committen), wenn sich wirklich etwas geändert hat.
+  // Sonst gäbe es beim 5-Minuten-Takt fast 300 Commits pro Tag. Ein älteres lastRun ist unkritisch:
+  // das Catch-up-Fenster wird nur größer, doppelte Pushes verhindert state.sent.
+  const changed = contentSnapshot() !== initialSnapshot;
+  const lastRunAgeHours = now.diff(lastRun, "hours").hours;
+  if (changed || lastRunAgeHours >= 6) {
+    state.meta.lastRun = now.toISO();
+    saveState();
+  } else {
+    console.log("No state changes, not saving.");
+  }
   console.log("done");
 })().catch((e) => {
   console.error(e);
