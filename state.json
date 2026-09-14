@@ -472,9 +472,81 @@
       "homeAway": "away",
       "opponent": "HSG Lauff-Nei",
       "teamKey": "herren"
+    },
+    "aDRhfDk0NTAzNDY": {
+      "kickoff": "2026-09-26T16:00:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim 2 - HSG Wim/Biber 2",
+      "homeAway": "home",
+      "opponent": "HSG Wim/Biber 2",
+      "teamKey": "herren2"
+    },
+    "aDRhfDk0NTAzMDY": {
+      "kickoff": "2026-10-18T16:00:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim 2 - HSG Hohenlohe 3",
+      "homeAway": "home",
+      "opponent": "HSG Hohenlohe 3",
+      "teamKey": "herren2"
+    },
+    "aDRhfDk0NTAyOTY": {
+      "kickoff": "2026-10-24T17:15:00.000+02:00",
+      "location": "Walter-Hohmann-Schulsporthalle, Bürgermeister-Henn-Straße, D-74736 Hardheim",
+      "summary": "TV Hardheim 3 - SV Obrigheim 2",
+      "homeAway": "away",
+      "opponent": "TV Hardheim 3",
+      "teamKey": "herren2"
+    },
+    "aDRhfDk0NTAzMzY": {
+      "kickoff": "2026-11-28T20:00:00.000+01:00",
+      "location": "Stadionhalle, Ludwigsburger Straße 70, D-71696 Möglingen",
+      "summary": "HSG Leudelsb. 4 - SV Obrigheim 2",
+      "homeAway": "away",
+      "opponent": "HSG Leudelsb. 4",
+      "teamKey": "herren2"
+    },
+    "aDRhfDk0NTAzNTY": {
+      "kickoff": "2026-12-19T16:00:00.000+01:00",
+      "location": "Jahnhalle, Hammerweg 7, D-74821 Mosbach",
+      "summary": "TV Mosbach 2 - SV Obrigheim 2",
+      "homeAway": "away",
+      "opponent": "TV Mosbach 2",
+      "teamKey": "herren2"
+    },
+    "aDRhfDk0NTA0MTE": {
+      "kickoff": "2027-01-10T16:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim 2 - HSG Leudelsb. 4",
+      "homeAway": "home",
+      "opponent": "HSG Leudelsb. 4",
+      "teamKey": "herren2"
+    },
+    "aDRhfDk0NTAyODE": {
+      "kickoff": "2027-01-23T16:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim 2 - TV Mosbach 2",
+      "homeAway": "home",
+      "opponent": "TV Mosbach 2",
+      "teamKey": "herren2"
+    },
+    "aDRhfDk0NTAzNzE": {
+      "kickoff": "2027-02-21T16:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim 2 - TV Hardheim 3",
+      "homeAway": "home",
+      "opponent": "TV Hardheim 3",
+      "teamKey": "herren2"
+    },
+    "aDRhfDk0NTAzODE": {
+      "kickoff": "2027-02-27T18:00:00.000+01:00",
+      "location": "Creutzfelder Sporthalle, Pestalozzistraße 20, D-74629 Pfedelbach",
+      "summary": "HSG Hohenlohe 3 - SV Obrigheim 2",
+      "homeAway": "away",
+      "opponent": "HSG Hohenlohe 3",
+      "teamKey": "herren2"
     }
   },
   "meta": {
-    "lastRun": "2026-09-14T20:01:06.823+02:00"
+    "lastRun": "2026-09-14T22:30:52.091+02:00"
   }
 }
