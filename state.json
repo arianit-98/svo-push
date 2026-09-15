@@ -544,9 +544,17 @@
       "homeAway": "away",
       "opponent": "HSG Hohenlohe 3",
       "teamKey": "herren2"
+    },
+    "aDRhfDk1OTIzNTY": {
+      "kickoff": "2027-03-14T15:00:00.000+01:00",
+      "location": "Römerhalle, Römerstraße, D-74078 Heilbronn-Neckargartach",
+      "summary": "HSG Heilbronn - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "HSG Heilbronn",
+      "teamKey": "c1"
     }
   },
   "meta": {
-    "lastRun": "2026-09-15T10:30:54.829+02:00"
+    "lastRun": "2026-09-15T15:01:03.677+02:00"
   }
 }
