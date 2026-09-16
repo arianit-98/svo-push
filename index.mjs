@@ -10,7 +10,8 @@ const ADMIN_QUEUE_PATH = "./admin_queue.json";
 const ADMIN_MAX_DELAY_MINUTES = 120; // geplante Admin-Pushes, die mehr als 2h überfällig sind, verfallen
 
 // ====== Scheduler Einstellungen ======
-const WINDOW_MINUTES = 6;      // Toleranz pro Run
+const WINDOW_MINUTES = 6;      // Rückblick über den letzten Lauf hinaus (Catch-up)
+const EARLY_MINUTES = 1;       // höchstens so viel zu früh senden (Uhr-Toleranz), sonst lieber bis zum nächsten Lauf warten
 const LOOKAHEAD_DAYS = 180;    // wie weit voraus wir Spiele betrachten
 const FETCH_TIMEOUT_MS = 15000;
 
@@ -320,11 +321,13 @@ function anyTopicCondition(topics) {
   return topics.map((t) => `'${t}' in topics`).join(" || ");
 }
 
-// Catch-up Fenster: statt nur "±WINDOW_MINUTES um fireAt",
-// schicken wir, wenn fireAt zwischen lastRun und now liegt (plus kleiner Toleranz).
+// Catch-up Fenster: schicken, wenn fireAt zwischen lastRun und now liegt.
+// Nach vorne nur EARLY_MINUTES Toleranz: früher waren es 6 Minuten, dadurch kam z.B. die
+// 18:00-Erinnerung schon beim Lauf um 17:55. Der Scheduler läuft alle 5 Minuten (cron-job.org),
+// eine Push kommt jetzt also zwischen fireAt und ca. fireAt + 5 Minuten.
 function shouldFire(fireAt, lastRun, now) {
   const lower = lastRun.minus({ minutes: WINDOW_MINUTES });
-  const upper = now.plus({ minutes: WINDOW_MINUTES });
+  const upper = now.plus({ minutes: EARLY_MINUTES });
   return fireAt >= lower && fireAt <= upper;
 }
 
@@ -389,7 +392,7 @@ async function processAdminQueue(now) {
   // wenn noch nie gelaufen: "so tun als wäre lastRun 15 Minuten her"
   if (!lastRun) lastRun = now.minus({ minutes: 15 });
 
-  console.log(`Now: ${now.toISO()} (${TZ}), catch-up from lastRun=${lastRun.toISO()}, window ±${WINDOW_MINUTES}min`);
+  console.log(`Now: ${now.toISO()} (${TZ}), catch-up from lastRun=${lastRun.toISO()}, window -${WINDOW_MINUTES}/+${EARLY_MINUTES}min`);
 
   // 0) FORCE PUSH (falls gesetzt)
   if (FORCE_PUSH_AT && FORCE_PUSH_TOPIC) {
