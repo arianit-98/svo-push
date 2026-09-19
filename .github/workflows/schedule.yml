@@ -26,6 +26,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
+          # aktuellen Stand von main holen, nicht den Commit beim Auslösen: Wartet der Lauf in der
+          # concurrency-Warteschlange, hätte er sonst ein veraltetes state.json und würde bereits
+          # verschickte Erinnerungen nochmal senden
+          ref: main
           persist-credentials: true
           fetch-depth: 0
 
