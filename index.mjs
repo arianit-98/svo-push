@@ -15,6 +15,13 @@ const EARLY_MINUTES = 1;       // höchstens so viel zu früh senden (Uhr-Tolera
 const LOOKAHEAD_DAYS = 180;    // wie weit voraus wir Spiele betrachten
 const FETCH_TIMEOUT_MS = 15000;
 
+// Ergebnis-Push nach Spielende
+// Frühestens so lange nach Anpfiff: Läuft ein Liveticker, stehen während des Spiels schon
+// Zwischenstände in gHomeGoals/gGuestGoals; ohne Ticker kommt das Ergebnis ohnehin erst danach.
+const RESULT_MIN_MINUTES = 80;
+// Wird das Ergebnis erst später eingetragen, schicken wir es noch bis so lange nach Anpfiff
+const RESULT_MAX_HOURS = 48;
+
 // Teams / Handball4all-Ligen
 // Die handball.net-ICS-Feeds gibt es nicht mehr (404). Wir holen den Spielplan der Liga direkt
 // von Handball4all – dieselbe Quelle wie h4a-proxy.php auf svohandball.de.
@@ -171,7 +178,8 @@ if (fs.existsSync(STATE_PATH)) {
 }
 
 function contentSnapshot() {
-  return JSON.stringify({ sent: state.sent, events: state.events });
+  // resultsSince gehört dazu, sonst würde es beim ersten Lauf nicht gespeichert
+  return JSON.stringify({ sent: state.sent, events: state.events, resultsSince: state.meta.resultsSince });
 }
 const initialSnapshot = contentSnapshot();
 
@@ -239,10 +247,70 @@ async function loadGames(feed) {
       location,
       homeAway: isHome ? "home" : "away",
       opponent: isHome ? guestTeam : homeTeam,
+      homeGoals: goals(g.gHomeGoals),
+      guestGoals: goals(g.gGuestGoals),
+      homeGoalsHalf: goals(g.gHomeGoals_1),
+      guestGoalsHalf: goals(g.gGuestGoals_1),
+      live: g.live === true,
+      comment: norm(g.gComment),
     });
   }
 
   return games;
+}
+
+// Tore: " " oder "-" heißt noch kein Ergebnis
+function goals(v) {
+  const s = norm(v);
+  if (!s || s === "-") return null;
+  const n = parseInt(s, 10);
+  return Number.isNaN(n) ? null : n;
+}
+
+// Ergebnis an alle, die mindestens eine Erinnerung des Teams aktiviert haben (einmal pro Gerät)
+async function sendResultIfDue(feed, game, eventKey, now, resultsSince) {
+  const { start, homeAway, opponent, homeGoals, guestGoals } = game;
+  if (homeGoals === null || guestGoals === null) return;
+  if (game.live) return; // Liveticker läuft noch, das ist ein Zwischenstand
+  if (start < resultsSince) return; // Spiele vor Einführung der Ergebnis-Push nicht nachträglich melden
+  if (now < start.plus({ minutes: RESULT_MIN_MINUTES })) return;
+  if (now > start.plus({ hours: RESULT_MAX_HOURS })) return;
+
+  const id = `result|${feed.teamKey}|${eventKey}`;
+  if (wasSent(id)) return;
+
+  const us = homeAway === "home" ? homeGoals : guestGoals;
+  const them = homeAway === "home" ? guestGoals : homeGoals;
+  const outcome = us > them ? "✅ Sieg" : us < them ? "❌ Niederlage" : "🤝 Unentschieden";
+  const title = `${outcome} – ${feed.teamLabel} 💛💙`;
+
+  const homeName = homeAway === "home" ? feed.clubShort : opponent;
+  const guestName = homeAway === "home" ? opponent : feed.clubShort;
+  const lines = [`${homeName} ${homeGoals}:${guestGoals} ${guestName}`];
+  if (game.homeGoalsHalf !== null && game.guestGoalsHalf !== null) {
+    lines.push(`Halbzeit ${game.homeGoalsHalf}:${game.guestGoalsHalf}`);
+  }
+  if (game.comment) lines.push(game.comment);
+
+  console.log(`RESULT -> ${feed.teamKey} event=${eventKey} ${homeGoals}:${guestGoals}`);
+  await sendPush(
+    { condition: anyTopicCondition(Object.values(TOPICS[feed.teamKey])) },
+    title,
+    lines.join("\n"),
+    {
+      kind: "result",
+      team: feed.teamKey,
+      eventKey,
+      kickoff: start.toISO(),
+      homeAway,
+      opponent,
+      homeGoals,
+      guestGoals,
+      ...linkData(feed),
+    },
+    makeCollapseId("result", feed.teamKey, eventKey)
+  );
+  markSent(id);
 }
 
 // "deeplink" öffnet die App (ab Version 1.1) nativ. Bewusst kein "url"-Feld mehr: das hat der alte
@@ -392,6 +460,11 @@ async function processAdminQueue(now) {
   // wenn noch nie gelaufen: "so tun als wäre lastRun 15 Minuten her"
   if (!lastRun) lastRun = now.minus({ minutes: 15 });
 
+  // Ab wann Ergebnisse gemeldet werden: beim ersten Lauf mit dieser Funktion "jetzt", damit nicht
+  // plötzlich die Ergebnisse der letzten Tage verschickt werden. RESULTS_SINCE nur zum Testen.
+  if (!state.meta.resultsSince) state.meta.resultsSince = now.toISO();
+  const resultsSince = DateTime.fromISO(process.env.RESULTS_SINCE || state.meta.resultsSince, { zone: TZ });
+
   console.log(`Now: ${now.toISO()} (${TZ}), catch-up from lastRun=${lastRun.toISO()}, window -${WINDOW_MINUTES}/+${EARLY_MINUTES}min`);
 
   // 0) FORCE PUSH (falls gesetzt)
@@ -447,11 +520,14 @@ async function processAdminQueue(now) {
     for (const game of games) {
       const { start, summary, location, uid, homeAway, opponent } = game;
 
-      if (start < now.minus({ hours: 6 })) continue;
-      if (start > lookahead) continue;
-
       // Event-Key
       const eventKey = Buffer.from(uid).toString("base64url");
+
+      // Ergebnis kommt oft erst Stunden nach dem Spiel, deshalb vor dem 6-Stunden-Filter
+      await sendResultIfDue(feed, game, eventKey, now, resultsSince);
+
+      if (start < now.minus({ hours: 6 })) continue;
+      if (start > lookahead) continue;
 
       const prev = state.events[eventKey];
       const currentSnapshot = {
