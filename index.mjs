@@ -16,9 +16,6 @@ const LOOKAHEAD_DAYS = 180;    // wie weit voraus wir Spiele betrachten
 const FETCH_TIMEOUT_MS = 15000;
 
 // Ergebnis-Push nach Spielende
-// Frühestens so lange nach Anpfiff: Läuft ein Liveticker, stehen während des Spiels schon
-// Zwischenstände in gHomeGoals/gGuestGoals; ohne Ticker kommt das Ergebnis ohnehin erst danach.
-const RESULT_MIN_MINUTES = 80;
 // Wird das Ergebnis erst später eingetragen, schicken wir es noch bis so lange nach Anpfiff
 const RESULT_MAX_HOURS = 48;
 
@@ -28,6 +25,9 @@ const RESULT_MAX_HOURS = 48;
 // ⚠️ Die Liga-ID (classId) ändert sich jede Saison und muss dann hier aktualisiert werden.
 //    classId steht in der Spielplan-URL auf handball4all.de (Parameter "cl").
 // teamMatch: Teil des Mannschaftsnamens, wie er in gHomeTeam/gGuestTeam steht.
+// resultMinMinutes: Ergebnis-Push frühestens so lange nach Anpfiff (Spielzeit + Pause + Puffer).
+//   Läuft ein Liveticker, stehen während des Spiels schon Zwischenstände in gHomeGoals/gGuestGoals;
+//   das Feld "live" sollte das anzeigen, die Grenze ist die zweite Absicherung.
 const H4A_URL = "https://spo.handball4all.de/service/if_g_json.php";
 
 const FEEDS = [
@@ -39,6 +39,7 @@ const FEEDS = [
     classId: 161161,   // Männer-Landesliga Staffel 1, Saison 26/27
     teamMatch: "SV Obrigheim",
     deeplink: "https://svohandball.de/de/mannschaften/1-mannschaft/",
+    resultMinMinutes: 75, // 2 × 30 min
   },
   {
     teamKey: "herren2",
@@ -48,6 +49,7 @@ const FEEDS = [
     classId: 161571,   // Männer 2. Bezirksklasse Gruppe 1, Saison 26/27
     teamMatch: "SV Obrigheim 2",
     deeplink: "https://svohandball.de/de/mannschaften/1-mannschaft/",
+    resultMinMinutes: 75, // 2 × 30 min
   },
   {
     teamKey: "c1",     // Key bleibt "c1", damit bestehende Abos (team_c1_*) weiter funktionieren
@@ -57,6 +59,7 @@ const FEEDS = [
     classId: 165801,   // mC-Jugend Bezirksklasse Gruppe 1, Saison 26/27
     teamMatch: "Neck-Obrig",   // "JSG Neck-Obrig"
     deeplink: "https://svohandball.de/de/mannschaften/c-jugend/",
+    resultMinMinutes: 65, // 2 × 25 min
   },
   {
     teamKey: "b1",
@@ -66,6 +69,7 @@ const FEEDS = [
     classId: 165711,   // mB-Jugend Bezirksliga Gruppe 1, Saison 26/27
     teamMatch: "Neck-Obrig",
     deeplink: "https://svohandball.de/de/mannschaften/B-Jugend/",
+    resultMinMinutes: 65, // 2 × 25 min
   },
 ];
 
@@ -273,7 +277,7 @@ async function sendResultIfDue(feed, game, eventKey, now, resultsSince) {
   if (homeGoals === null || guestGoals === null) return;
   if (game.live) return; // Liveticker läuft noch, das ist ein Zwischenstand
   if (start < resultsSince) return; // Spiele vor Einführung der Ergebnis-Push nicht nachträglich melden
-  if (now < start.plus({ minutes: RESULT_MIN_MINUTES })) return;
+  if (now < start.plus({ minutes: feed.resultMinMinutes })) return;
   if (now > start.plus({ hours: RESULT_MAX_HOURS })) return;
 
   const id = `result|${feed.teamKey}|${eventKey}`;
