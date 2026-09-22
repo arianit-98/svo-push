@@ -41,7 +41,8 @@
     "herren|h1|aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4OTc2|2026-04-18T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "herren|d4|aDRhfDkzOTAyMTE|2026-09-20T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "herren|d1|aDRhfDkzOTAyMTE|2026-09-20T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "herren|h1|aDRhfDkzOTAyMTE|2026-09-20T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
+    "herren|h1|aDRhfDkzOTAyMTE|2026-09-20T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
+    "c1|d4|aDRhfDk1OTIxODE|2026-09-26T15:40:00.000+02:00|Kraichgauhalle, Wagnerstraße 9, D-74906 Bad Rappenau|away": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -558,7 +559,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-09-22T13:10:43.079+02:00",
+    "lastRun": "2026-09-22T15:40:43.763+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
