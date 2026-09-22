@@ -42,7 +42,8 @@
     "herren|d4|aDRhfDkzOTAyMTE|2026-09-20T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "herren|d1|aDRhfDkzOTAyMTE|2026-09-20T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "herren|h1|aDRhfDkzOTAyMTE|2026-09-20T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "c1|d4|aDRhfDk1OTIxODE|2026-09-26T15:40:00.000+02:00|Kraichgauhalle, Wagnerstraße 9, D-74906 Bad Rappenau|away": true
+    "c1|d4|aDRhfDk1OTIxODE|2026-09-26T15:40:00.000+02:00|Kraichgauhalle, Wagnerstraße 9, D-74906 Bad Rappenau|away": true,
+    "herren2|d4|aDRhfDk0NTAzNDY|2026-09-26T16:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -556,10 +557,18 @@
       "homeAway": "away",
       "opponent": "HSG Heilbronn",
       "teamKey": "c1"
+    },
+    "aDRhfDk1OTA5NTE": {
+      "kickoff": "2027-03-21T16:00:00.000+01:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "JSG Neck-Obrig - TSV Willsbach",
+      "homeAway": "home",
+      "opponent": "TSV Willsbach",
+      "teamKey": "b1"
     }
   },
   "meta": {
-    "lastRun": "2026-09-22T15:40:43.763+02:00",
+    "lastRun": "2026-09-22T16:01:06.162+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
