@@ -331,11 +331,10 @@ function formatDate(dt) {
   return dt.setZone(TZ).toFormat("dd.LL.yyyy");
 }
 
-function formatLine2(dt, location) {
-  const time = `${formatTime(dt)} Uhr`;
-  const loc = norm(location);
-  if (!loc) return time;
-  return `${time} - ${loc}`;
+// "So, 04.10.2026 · 18:00 Uhr"
+function formatWhen(dt) {
+  const day = dt.setZone(TZ).setLocale("de").toFormat("ccc");
+  return `${day}, ${formatDate(dt)} · ${formatTime(dt)} Uhr`;
 }
 
 function makeMatchupLine(feed, homeAway, opponent) {
@@ -351,9 +350,10 @@ function makeTitle(feed, homeAway) {
 }
 
 function makeBody(feed, homeAway, opponent, dt, location) {
-  const line1 = makeMatchupLine(feed, homeAway, opponent);
-  const line2 = formatLine2(dt, location);
-  return `${line1}\n${line2}`;
+  const lines = [makeMatchupLine(feed, homeAway, opponent), formatWhen(dt)];
+  const loc = norm(location);
+  if (loc) lines.push(loc);
+  return lines.join("\n");
 }
 
 function makeCollapseId(prefix, teamKey, eventKey) {
@@ -560,14 +560,8 @@ async function processAdminQueue(now) {
           const prevDT = DateTime.fromISO(prev.kickoff, { zone: TZ });
           const currDT = start;
 
-          const prevDate = formatDate(prevDT);
-          const currDate = formatDate(currDT);
-
-          const prevWhen = prevDate !== currDate ? `${prevDate} ${formatTime(prevDT)} Uhr` : `${formatTime(prevDT)} Uhr`;
-          const currWhen = prevDate !== currDate ? `${currDate} ${formatTime(currDT)} Uhr` : `${formatTime(currDT)} Uhr`;
-
-          const prevLine = `${prevWhen} - ${norm(prev.location) || "-"}`;
-          const currLine = `${currWhen} - ${norm(currentSnapshot.location) || "-"}`;
+          const prevLine = `${formatWhen(prevDT)} - ${norm(prev.location) || "-"}`;
+          const currLine = `${formatWhen(currDT)} - ${norm(currentSnapshot.location) || "-"}`;
 
           const body = `${line1}\nAlt: ${prevLine}\nNeu: ${currLine}`;
 
