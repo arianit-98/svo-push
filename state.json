@@ -565,10 +565,218 @@
       "homeAway": "home",
       "opponent": "TSV Willsbach",
       "teamKey": "b1"
+    },
+    "aDRhfDk1OTk3MjE": {
+      "kickoff": "2026-09-27T15:30:00.000+02:00",
+      "location": "Jahnhalle, Hammerweg 7, D-74821 Mosbach",
+      "summary": "TV Mosbach - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "TV Mosbach",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk1OTk3NDY": {
+      "kickoff": "2026-10-04T14:45:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig - JSG Kochertal",
+      "homeAway": "home",
+      "opponent": "JSG Kochertal",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk1OTk3NjE": {
+      "kickoff": "2026-10-10T14:00:00.000+02:00",
+      "location": "Mühltalhalle, Heinsheimer Straße 65, D-74906 Bad Rappenau",
+      "summary": "Bad Rappenau - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "Bad Rappenau",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk1OTk3NzY": {
+      "kickoff": "2026-10-18T11:35:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig - TV Hardheim",
+      "homeAway": "home",
+      "opponent": "TV Hardheim",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk1OTk4MjE": {
+      "kickoff": "2026-11-07T14:30:00.000+01:00",
+      "location": "Sporthalle, Oststraße 53, D-74831 Gundelsheim",
+      "summary": "SG Gundelsheim - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "SG Gundelsheim",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk1OTk3ODE": {
+      "kickoff": "2026-11-22T15:00:00.000+01:00",
+      "location": "Grünewaldhalle, Vitryallee 7, D-97941 Tauberbischofsheim",
+      "summary": "JSG Tauberfr. - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "JSG Tauberfr.",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk1OTk4NjE": {
+      "kickoff": "2026-12-06T14:35:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig - TV Mosbach",
+      "homeAway": "home",
+      "opponent": "TV Mosbach",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk1OTk4ODY": {
+      "kickoff": "2026-12-13T13:45:00.000+01:00",
+      "location": "Glück-Auf-Halle, Fahräckerstraße 2, D-74177 Bad Friedrichshall",
+      "summary": "JSG Kochertal - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "JSG Kochertal",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk1OTk4NTY": {
+      "kickoff": "2026-12-20T11:00:00.000+01:00",
+      "location": "Weibertreuhalle, Rossäckerstraße, D-74189 Weinsberg",
+      "summary": "TSV Weinsberg - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "TSV Weinsberg",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk1OTk5MDE": {
+      "kickoff": "2027-02-21T14:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig - Bad Rappenau",
+      "homeAway": "home",
+      "opponent": "Bad Rappenau",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk1OTk5MTY": {
+      "kickoff": "2027-02-28T12:55:00.000+01:00",
+      "location": "Walter-Hohmann-Schulsporthalle, Bürgermeister-Henn-Straße, D-74736 Hardheim",
+      "summary": "TV Hardheim - JSG Neck-Obrig",
+      "homeAway": "away",
+      "opponent": "TV Hardheim",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk1OTk5MjE": {
+      "kickoff": "2027-03-07T12:45:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig - JSG Tauberfr.",
+      "homeAway": "home",
+      "opponent": "JSG Tauberfr.",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk1OTk5NjE": {
+      "kickoff": "2027-03-21T14:30:00.000+01:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "JSG Neck-Obrig - SG Gundelsheim",
+      "homeAway": "home",
+      "opponent": "SG Gundelsheim",
+      "teamKey": "d1jugend"
+    },
+    "aDRhfDk2Mzg2MjE": {
+      "kickoff": "2026-09-27T12:00:00.000+02:00",
+      "location": "Kraichgauhalle, Wagnerstraße 9, D-74906 Bad Rappenau",
+      "summary": "Bad Rappenau 2 - JSG Neck-Obrig 2",
+      "homeAway": "away",
+      "opponent": "Bad Rappenau 2",
+      "teamKey": "d2jugend"
+    },
+    "aDRhfDk2Mzg2NjY": {
+      "kickoff": "2026-10-18T13:00:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig 2 - HSG Lauff-Nei 2",
+      "homeAway": "home",
+      "opponent": "HSG Lauff-Nei 2",
+      "teamKey": "d2jugend"
+    },
+    "aDRhfDk2Mzg3MTY": {
+      "kickoff": "2026-10-31T13:00:00.000+01:00",
+      "location": "Stauferhalle, Fronhäuserstraße 5, D-74206 Bad Wimpfen",
+      "summary": "HSG Wim/Biber - JSG Neck-Obrig 2",
+      "homeAway": "away",
+      "opponent": "HSG Wim/Biber",
+      "teamKey": "d2jugend"
+    },
+    "aDRhfDk2Mzg4NDY": {
+      "kickoff": "2026-11-07T11:00:00.000+01:00",
+      "location": "Creutzfelder Sporthalle, Pestalozzistraße 20, D-74629 Pfedelbach",
+      "summary": "HSG Hohenlohe 2 - JSG Neck-Obrig 2",
+      "homeAway": "away",
+      "opponent": "HSG Hohenlohe 2",
+      "teamKey": "d2jugend"
+    },
+    "aDRhfDk2Mzg3NjE": {
+      "kickoff": "2026-11-14T11:00:00.000+01:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "JSG Neck-Obrig 2 - Bad Rappenau 2",
+      "homeAway": "home",
+      "opponent": "Bad Rappenau 2",
+      "teamKey": "d2jugend"
+    },
+    "aDRhfDk2Mzg2ODE": {
+      "kickoff": "2026-11-22T13:00:00.000+01:00",
+      "location": "Sporthalle auf der Schanz, Kraichgauplatz 17, D-74080 Heilbronn-Böckingen",
+      "summary": "SG Heuchelb. 2 - JSG Neck-Obrig 2",
+      "homeAway": "away",
+      "opponent": "SG Heuchelb. 2",
+      "teamKey": "d2jugend"
+    },
+    "aDRhfDk2Mzg2OTE": {
+      "kickoff": "2026-11-28T11:00:00.000+01:00",
+      "location": "Hardwaldhalle, Berliner Ring 18/1, D-75031 Eppingen",
+      "summary": "TB Richen - JSG Neck-Obrig 2",
+      "homeAway": "away",
+      "opponent": "TB Richen",
+      "teamKey": "d2jugend"
+    },
+    "aDRhfDk2Mzg4NTY": {
+      "kickoff": "2026-12-06T13:10:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig 2 - HSG Wim/Biber",
+      "homeAway": "home",
+      "opponent": "HSG Wim/Biber",
+      "teamKey": "d2jugend"
+    },
+    "aDRhfDk2Mzg3MzY": {
+      "kickoff": "2026-12-19T12:30:00.000+01:00",
+      "location": "Sulmhalle, Saarstraße 20, D-74172 Neckarsulm",
+      "summary": "SU Neckarsulm 2 - JSG Neck-Obrig 2",
+      "homeAway": "away",
+      "opponent": "SU Neckarsulm 2",
+      "teamKey": "d2jugend"
+    },
+    "aDRhfDk2Mzg4MDY": {
+      "kickoff": "2027-02-27T14:30:00.000+01:00",
+      "location": "Sporthalle, Charlottenstraße, D-74348 Lauffen am Neckar",
+      "summary": "HSG Lauff-Nei 2 - JSG Neck-Obrig 2",
+      "homeAway": "away",
+      "opponent": "HSG Lauff-Nei 2",
+      "teamKey": "d2jugend"
+    },
+    "aDRhfDk2Mzg4MjE": {
+      "kickoff": "2027-03-07T11:15:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "JSG Neck-Obrig 2 - SG Heuchelb. 2",
+      "homeAway": "home",
+      "opponent": "SG Heuchelb. 2",
+      "teamKey": "d2jugend"
+    },
+    "aDRhfDk2Mzg4MzE": {
+      "kickoff": "2027-03-13T14:00:00.000+01:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "JSG Neck-Obrig 2 - TB Richen",
+      "homeAway": "home",
+      "opponent": "TB Richen",
+      "teamKey": "d2jugend"
+    },
+    "aDRhfDk2Mzg3MDY": {
+      "kickoff": "2027-03-21T13:00:00.000+01:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "JSG Neck-Obrig 2 - HSG Hohenlohe 2",
+      "homeAway": "home",
+      "opponent": "HSG Hohenlohe 2",
+      "teamKey": "d2jugend"
     }
   },
   "meta": {
-    "lastRun": "2026-09-22T16:01:06.162+02:00",
+    "lastRun": "2026-09-22T16:15:42.819+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
