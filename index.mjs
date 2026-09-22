@@ -71,6 +71,26 @@ const FEEDS = [
     deeplink: "https://svohandball.de/de/mannschaften/B-Jugend/",
     resultMinMinutes: 65, // 2 × 25 min
   },
+  {
+    teamKey: "d1jugend", // nicht "d1", sonst hieße das Topic team_d1_d1 (Offset heißt auch d1)
+    teamLabel: "D1-Jugend",
+    clubShort: "JSG",
+    org: 216,
+    classId: 166111,   // mD-Jugend, Saison 26/27
+    teamMatch: "JSG Neck-Obrig",
+    deeplink: "https://svohandball.de/de/mannschaften/DJugend/",
+    resultMinMinutes: 55, // 2 × 20 min
+  },
+  {
+    teamKey: "d2jugend",
+    teamLabel: "D2-Jugend",
+    clubShort: "JSG 2",
+    org: 216,
+    classId: 166131,   // mD-Jugend, Saison 26/27
+    teamMatch: "JSG Neck-Obrig 2",
+    deeplink: "https://svohandball.de/de/mannschaften/DJugend/",
+    resultMinMinutes: 55, // 2 × 20 min
+  },
 ];
 
 // Topics pro Team + Offset (muss zu push.php auf svohandball.de passen)
@@ -79,6 +99,8 @@ const TOPICS = {
   herren2: { d4: "team_herren2_d4", d1: "team_herren2_d1", h1: "team_herren2_h1" },
   c1:     { d4: "team_c1_d4",     d1: "team_c1_d1",     h1: "team_c1_h1" },
   b1:     { d4: "team_b1_d4",     d1: "team_b1_d1",     h1: "team_b1_h1" },
+  d1jugend: { d4: "team_d1jugend_d4", d1: "team_d1jugend_d1", h1: "team_d1jugend_h1" },
+  d2jugend: { d4: "team_d2jugend_d4", d1: "team_d2jugend_d1", h1: "team_d2jugend_h1" },
 };
 
 // Offsets (Presets)
