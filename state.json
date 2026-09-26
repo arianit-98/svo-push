@@ -52,7 +52,8 @@
     "d2jugend|d1|aDRhfDk2Mzg2MjE|2026-09-27T12:00:00.000+02:00|Kraichgauhalle, Wagnerstraße 9, D-74906 Bad Rappenau|away": true,
     "c1|h1|aDRhfDk1OTIxODE|2026-09-26T15:40:00.000+02:00|Kraichgauhalle, Wagnerstraße 9, D-74906 Bad Rappenau|away": true,
     "herren2|h1|aDRhfDk0NTAzNDY|2026-09-26T16:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "d1jugend|d1|aDRhfDk1OTk3MjE|2026-09-27T15:30:00.000+02:00|Jahnhalle, Hammerweg 7, D-74821 Mosbach|away": true
+    "d1jugend|d1|aDRhfDk1OTk3MjE|2026-09-27T15:30:00.000+02:00|Jahnhalle, Hammerweg 7, D-74821 Mosbach|away": true,
+    "b1|d1|aDRhfDk1OTA3NzE|2026-09-27T16:00:00.000+02:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -785,7 +786,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-09-26T15:30:52.722+02:00",
+    "lastRun": "2026-09-26T16:01:02.004+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
