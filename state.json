@@ -54,7 +54,8 @@
     "herren2|h1|aDRhfDk0NTAzNDY|2026-09-26T16:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "d1jugend|d1|aDRhfDk1OTk3MjE|2026-09-27T15:30:00.000+02:00|Jahnhalle, Hammerweg 7, D-74821 Mosbach|away": true,
     "b1|d1|aDRhfDk1OTA3NzE|2026-09-27T16:00:00.000+02:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
-    "result|c1|aDRhfDk1OTIxODE": true
+    "result|c1|aDRhfDk1OTIxODE": true,
+    "result|herren2|aDRhfDk0NTAzNDY": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -787,7 +788,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-09-26T17:10:38.201+02:00",
+    "lastRun": "2026-09-26T17:30:55.074+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
