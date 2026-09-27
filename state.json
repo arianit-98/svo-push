@@ -60,7 +60,8 @@
     "result|d2jugend|aDRhfDk2Mzg2MjE": true,
     "d1jugend|h1|aDRhfDk1OTk3MjE|2026-09-27T15:30:00.000+02:00|Jahnhalle, Hammerweg 7, D-74821 Mosbach|away": true,
     "b1|h1|aDRhfDk1OTA3NzE|2026-09-27T16:00:00.000+02:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
-    "result|d1jugend|aDRhfDk1OTk3MjE": true
+    "result|d1jugend|aDRhfDk1OTk3MjE": true,
+    "result|b1|aDRhfDk1OTA3NzE": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -793,7 +794,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-09-27T16:35:30.951+02:00",
+    "lastRun": "2026-09-27T17:20:40.579+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
