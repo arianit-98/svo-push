@@ -56,7 +56,8 @@
     "b1|d1|aDRhfDk1OTA3NzE|2026-09-27T16:00:00.000+02:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
     "result|c1|aDRhfDk1OTIxODE": true,
     "result|herren2|aDRhfDk0NTAzNDY": true,
-    "d2jugend|h1|aDRhfDk2Mzg2MjE|2026-09-27T12:00:00.000+02:00|Kraichgauhalle, Wagnerstraße 9, D-74906 Bad Rappenau|away": true
+    "d2jugend|h1|aDRhfDk2Mzg2MjE|2026-09-27T12:00:00.000+02:00|Kraichgauhalle, Wagnerstraße 9, D-74906 Bad Rappenau|away": true,
+    "result|d2jugend|aDRhfDk2Mzg2MjE": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -789,7 +790,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-09-27T11:01:01.494+02:00",
+    "lastRun": "2026-09-27T13:05:28.883+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
