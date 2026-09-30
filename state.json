@@ -62,7 +62,8 @@
     "b1|h1|aDRhfDk1OTA3NzE|2026-09-27T16:00:00.000+02:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
     "result|d1jugend|aDRhfDk1OTk3MjE": true,
     "result|b1|aDRhfDk1OTA3NzE": true,
-    "d1jugend|d4|aDRhfDk1OTk3NDY|2026-10-04T14:45:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
+    "d1jugend|d4|aDRhfDk1OTk3NDY|2026-10-04T14:45:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
+    "c1|d4|aDRhfDk1OTIyMDE|2026-10-04T16:15:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -795,7 +796,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-09-30T14:45:42.548+02:00",
+    "lastRun": "2026-09-30T16:15:43.300+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
