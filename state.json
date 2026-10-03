@@ -67,7 +67,8 @@
     "herren|d4|aDRhfDkzOTAyNjE|2026-10-04T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "reloc|d1jugend|aDRhfDk1OTk3NzY|2026-11-01T16:15:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "d1jugend|d1|aDRhfDk1OTk3NDY|2026-10-04T14:45:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "c1|d1|aDRhfDk1OTIyMDE|2026-10-04T16:15:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
+    "c1|d1|aDRhfDk1OTIyMDE|2026-10-04T16:15:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
+    "herren|d1|aDRhfDkzOTAyNjE|2026-10-04T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -800,7 +801,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-10-03T16:15:43.909+02:00",
+    "lastRun": "2026-10-03T18:01:27.381+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
