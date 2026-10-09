@@ -30,6 +30,8 @@ const RESULT_MAX_HOURS = 48;
 //   das Feld "live" sollte das anzeigen, die Grenze ist die zweite Absicherung.
 const H4A_URL = "https://spo.handball4all.de/service/if_g_json.php";
 
+// deeplink: versteckte Seite pro Team (nur Spielplan + Tabelle, nicht im Menü, noindex) unter
+// /de/app/<team>.php. Muss https auf svohandball.de sein, sonst verwirft die App den Link.
 const FEEDS = [
   {
     teamKey: "herren",
@@ -38,7 +40,7 @@ const FEEDS = [
     org: 216,          // Baden-Württembergischer Handball-Verband
     classId: 161161,   // Männer-Landesliga Staffel 1, Saison 26/27
     teamMatch: "SV Obrigheim",
-    deeplink: "https://svohandball.de/de/mannschaften/1-mannschaft/",
+    deeplink: "https://svohandball.de/de/app/herren.php",
     resultMinMinutes: 75, // 2 × 30 min
   },
   {
@@ -48,7 +50,7 @@ const FEEDS = [
     org: 216,
     classId: 161571,   // Männer 2. Bezirksklasse Gruppe 1, Saison 26/27
     teamMatch: "SV Obrigheim 2",
-    deeplink: "https://svohandball.de/de/mannschaften/1-mannschaft/",
+    deeplink: "https://svohandball.de/de/app/herren2.php",
     resultMinMinutes: 75, // 2 × 30 min
   },
   {
@@ -58,7 +60,7 @@ const FEEDS = [
     org: 216,
     classId: 165801,   // mC-Jugend Bezirksklasse Gruppe 1, Saison 26/27
     teamMatch: "Neck-Obrig",   // "JSG Neck-Obrig"
-    deeplink: "https://svohandball.de/de/mannschaften/c-jugend/",
+    deeplink: "https://svohandball.de/de/app/c-jugend.php",
     resultMinMinutes: 65, // 2 × 25 min
   },
   {
@@ -68,7 +70,7 @@ const FEEDS = [
     org: 216,
     classId: 165711,   // mB-Jugend Bezirksliga Gruppe 1, Saison 26/27
     teamMatch: "Neck-Obrig",
-    deeplink: "https://svohandball.de/de/mannschaften/B-Jugend/",
+    deeplink: "https://svohandball.de/de/app/b-jugend.php",
     resultMinMinutes: 65, // 2 × 25 min
   },
   {
@@ -78,7 +80,7 @@ const FEEDS = [
     org: 216,
     classId: 166111,   // mD-Jugend, Saison 26/27
     teamMatch: "JSG Neck-Obrig",
-    deeplink: "https://svohandball.de/de/mannschaften/DJugend/",
+    deeplink: "https://svohandball.de/de/app/d1-jugend.php",
     resultMinMinutes: 55, // 2 × 20 min
   },
   {
@@ -88,7 +90,7 @@ const FEEDS = [
     org: 216,
     classId: 166131,   // mD-Jugend, Saison 26/27
     teamMatch: "JSG Neck-Obrig 2",
-    deeplink: "https://svohandball.de/de/mannschaften/DJugend/",
+    deeplink: "https://svohandball.de/de/app/d2-jugend.php",
     resultMinMinutes: 55, // 2 × 20 min
   },
 ];
