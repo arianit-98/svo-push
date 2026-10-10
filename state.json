@@ -78,7 +78,8 @@
     "d1jugend|d4|aDRhfDk1OTk3NjE|2026-10-10T14:00:00.000+02:00|Mühltalhalle, Heinsheimer Straße 65, D-74906 Bad Rappenau|away": true,
     "herren|d4|aDRhfDkzOTAyODE|2026-10-10T19:00:00.000+02:00|Sporthalle in der Au, Beihinger Straße 70, D-71726 Benningen|away": true,
     "d1jugend|d1|aDRhfDk1OTk3NjE|2026-10-10T14:00:00.000+02:00|Mühltalhalle, Heinsheimer Straße 65, D-74906 Bad Rappenau|away": true,
-    "herren|d1|aDRhfDkzOTAyODE|2026-10-10T19:00:00.000+02:00|Sporthalle in der Au, Beihinger Straße 70, D-71726 Benningen|away": true
+    "herren|d1|aDRhfDkzOTAyODE|2026-10-10T19:00:00.000+02:00|Sporthalle in der Au, Beihinger Straße 70, D-71726 Benningen|away": true,
+    "d1jugend|h1|aDRhfDk1OTk3NjE|2026-10-10T14:00:00.000+02:00|Mühltalhalle, Heinsheimer Straße 65, D-74906 Bad Rappenau|away": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -811,7 +812,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-10-10T07:05:28.816+02:00",
+    "lastRun": "2026-10-10T13:00:59.395+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
