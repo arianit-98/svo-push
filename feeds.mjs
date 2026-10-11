@@ -74,4 +74,28 @@ export const FEEDS = [
     deeplink: "https://svohandball.de/de/app/d2-jugend.php",
     resultMinMinutes: 55, // 2 × 20 min
   },
+  // E-Jugend: Turniere mit mehreren Spielen pro Tag (KO, 6+1 bzw. 4+1, FUN). spieltag: true heißt
+  // eine Erinnerung pro Spieltag (erstes Spiel des Tages) und eine Ergebnis-Zusammenfassung.
+  {
+    teamKey: "e1jugend",
+    teamLabel: "E-Jugend (6+1)",
+    clubShort: "JSG",
+    org: 216,
+    classId: 169031,   // gE-Jugend Bezirksoberliga (6+1), Saison 26/27
+    teamMatch: "JSG Neck-Obrig",
+    deeplink: "https://svohandball.de/de/app/e-jugend.php",
+    resultMinMinutes: 30, // nach dem letzten Spiel des Tages
+    spieltag: true,
+  },
+  {
+    teamKey: "e2jugend",
+    teamLabel: "E-Jugend (4+1)",
+    clubShort: "JSG 2",
+    org: 216,
+    classId: 169196,   // gE-Jugend Bezirksklasse Gruppe 2 Nord (4+1 A), Saison 26/27
+    teamMatch: "JSG Neck-Obrig 2",
+    deeplink: "https://svohandball.de/de/app/e-jugend.php",
+    resultMinMinutes: 30,
+    spieltag: true,
+  },
 ];
