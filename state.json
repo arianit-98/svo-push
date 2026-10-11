@@ -812,10 +812,98 @@
       "homeAway": "home",
       "opponent": "HSG Hohenlohe 2",
       "teamKey": "d2jugend"
+    },
+    "aDRhLXRhZ3xlMWp1Z2VuZHwyMDI2LTEwLTI0": {
+      "kickoff": "2026-10-24T11:00:00.000+02:00",
+      "location": "Walter-Hohmann-Schulsporthalle, Bürgermeister-Henn-Straße, D-74736 Hardheim",
+      "summary": "Spieltag 2026-10-24: JSG Neck-Obrig - TSV Weinsberg / TSV Korntal - JSG Neck-Obrig / TV Hardheim - JSG Neck-Obrig",
+      "homeAway": "tag",
+      "opponent": "TSV Weinsberg (KO), TSV Korntal (6+1), TV Hardheim (6+1)",
+      "teamKey": "e1jugend"
+    },
+    "aDRhLXRhZ3xlMWp1Z2VuZHwyMDI2LTExLTIy": {
+      "kickoff": "2026-11-22T14:00:00.000+01:00",
+      "location": "Jahnhalle, Jahnstraße 91, D-74321 Bietigheim-Bissingen",
+      "summary": "Spieltag 2026-11-22: JSG Neck-Obrig - BBM Bietigheim / BBM Bietigheim 2 - JSG Neck-Obrig / HSG Strohgäu - JSG Neck-Obrig",
+      "homeAway": "tag",
+      "opponent": "BBM Bietigheim (KO), BBM Bietigheim 2 (6+1), HSG Strohgäu (6+1)",
+      "teamKey": "e1jugend"
+    },
+    "aDRhLXRhZ3xlMWp1Z2VuZHwyMDI2LTEyLTA2": {
+      "kickoff": "2026-12-06T13:00:00.000+01:00",
+      "location": "Mehrzweckhalle, Hermann-Helber-Straße 7, D-71720 Oberstenfeld-Gronau",
+      "summary": "Spieltag 2026-12-06: JSG Neck-Obrig - TSG Schw.Hall / HSG Strohgäu - JSG Neck-Obrig / TV Hardheim - JSG Neck-Obrig",
+      "homeAway": "tag",
+      "opponent": "TSG Schw.Hall (KO), HSG Strohgäu (6+1), TV Hardheim (6+1)",
+      "teamKey": "e1jugend"
+    },
+    "aDRhLXRhZ3xlMWp1Z2VuZHwyMDI3LTAyLTIx": {
+      "kickoff": "2027-02-21T12:00:00.000+01:00",
+      "location": "Sporthalle, Kleines Feldle, D-71634 Ludwigsburg-Pflugfelden",
+      "summary": "Spieltag 2027-02-21: JSG Neck-Obrig - HB Ludwigsburg / Bottwar SG 2 - JSG Neck-Obrig / TV Hardheim - JSG Neck-Obrig",
+      "homeAway": "tag",
+      "opponent": "HB Ludwigsburg (KO), Bottwar SG 2 (6+1), TV Hardheim (6+1)",
+      "teamKey": "e1jugend"
+    },
+    "aDRhLXRhZ3xlMWp1Z2VuZHwyMDI3LTAyLTI4": {
+      "kickoff": "2027-02-28T11:00:00.000+01:00",
+      "location": "Strohgäuhalle, Eberdinger Straße, D-71282 Hemmingen",
+      "summary": "Spieltag 2027-02-28: JSG Neck-Obrig - SV K'westheim / Bottwar SG 2 - JSG Neck-Obrig / HSG Strohgäu - JSG Neck-Obrig",
+      "homeAway": "tag",
+      "opponent": "SV K'westheim (KO), Bottwar SG 2 (6+1), HSG Strohgäu (6+1)",
+      "teamKey": "e1jugend"
+    },
+    "aDRhLXRhZ3xlMWp1Z2VuZHwyMDI3LTAzLTE0": {
+      "kickoff": "2027-03-14T11:00:00.000+01:00",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
+      "summary": "Spieltag 2027-03-14: JSG Neck-Obrig - TSG Schw.Hall / TSV Korntal - JSG Neck-Obrig / BBM Bietigheim 2 - JSG Neck-Obrig",
+      "homeAway": "tag",
+      "opponent": "TSG Schw.Hall (KO), TSV Korntal (6+1), BBM Bietigheim 2 (6+1)",
+      "teamKey": "e1jugend"
+    },
+    "aDRhLXRhZ3xlMmp1Z2VuZHwyMDI2LTExLTI5": {
+      "kickoff": "2026-11-29T11:00:00.000+01:00",
+      "location": "Nibelungen-Halle, Theodor-Heuss-Ring 21, D-74731 Walldürn",
+      "summary": "Spieltag 2026-11-29: JSG Neck-Obrig 2 - SG Bad Mergent 2 / Bad Rappenau 2 - JSG Neck-Obrig 2 / JSG Neck-Obrig 2 - SG Bad Mergent 2 / SpG Walldürn - JSG Neck-Obrig 2 / SG Bad Mergent - JSG Neck-Obrig 2 / JSG Neck-Obrig 2 - Bad Rappenau 2",
+      "homeAway": "tag",
+      "opponent": "SG Bad Mergent 2 (KO), Bad Rappenau 2 (KO), SG Bad Mergent 2 (4+1), SpG Walldürn (4+1), SG Bad Mergent (FUN), Bad Rappenau 2 (FUN)",
+      "teamKey": "e2jugend"
+    },
+    "aDRhLXRhZ3xlMmp1Z2VuZHwyMDI2LTEyLTEy": {
+      "kickoff": "2026-12-12T12:00:00.000+01:00",
+      "location": "Sport- und Spielhalle, Dr.-Fritz-Schmitt-Ring, D-74722 Buchen",
+      "summary": "Spieltag 2026-12-12: ETSV Lauda - JSG Neck-Obrig 2 / ETSV Lauda - JSG Neck-Obrig 2 / JSG Neck-Obrig 2 - TSV Buchen 2 / JSG Neck-Obrig 2 - HSG Wim/Biber 2 / JSG Neck-Obrig 2 - TSV Buchen",
+      "homeAway": "tag",
+      "opponent": "ETSV Lauda (KO), ETSV Lauda (4+1), TSV Buchen 2 (FUN), HSG Wim/Biber 2 (4+1), TSV Buchen (FUN)",
+      "teamKey": "e2jugend"
+    },
+    "aDRhLXRhZ3xlMmp1Z2VuZHwyMDI3LTAxLTI0": {
+      "kickoff": "2027-01-24T11:00:00.000+01:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "Spieltag 2027-01-24: Bad Rappenau 2 - JSG Neck-Obrig 2 / Bad Rappenau 2 - JSG Neck-Obrig 2 / JSG Neck-Obrig 2 - TV Mosbach 2 / SC Züttlingen - JSG Neck-Obrig 2 / JSG Neck-Obrig 2 - JSG Tauberfr. 2",
+      "homeAway": "tag",
+      "opponent": "Bad Rappenau 2 (KO), Bad Rappenau 2 (FUN), TV Mosbach 2 (FUN), SC Züttlingen (4+1), JSG Tauberfr. 2 (4+1)",
+      "teamKey": "e2jugend"
+    },
+    "aDRhLXRhZ3xlMmp1Z2VuZHwyMDI3LTAyLTIx": {
+      "kickoff": "2027-02-21T11:00:00.000+01:00",
+      "location": "Nibelungen-Halle, Theodor-Heuss-Ring 21, D-74731 Walldürn",
+      "summary": "Spieltag 2027-02-21: JSG Neck-Obrig 2 - TV Mosbach 2 / SpG Walldürn - JSG Neck-Obrig 2 / HSG Wim/Biber - JSG Neck-Obrig 2 / JSG Neck-Obrig 2 - SpG Walldürn / JSG Neck-Obrig 2 - HSG Wim/Biber",
+      "homeAway": "tag",
+      "opponent": "TV Mosbach 2 (KO), SpG Walldürn (4+1), HSG Wim/Biber (4+1), SpG Walldürn (FUN), HSG Wim/Biber (FUN)",
+      "teamKey": "e2jugend"
+    },
+    "aDRhLXRhZ3xlMmp1Z2VuZHwyMDI3LTAzLTA3": {
+      "kickoff": "2027-03-07T11:00:00.000+01:00",
+      "location": "Tauber-Franken-Sporthalle, Hauptstraße, D-97922 Lauda-Königshofen",
+      "summary": "Spieltag 2027-03-07: HSG Wim/Biber 2 - JSG Neck-Obrig 2 / HSG Wim/Biber 2 - JSG Neck-Obrig 2 / JSG Neck-Obrig 2 - TV Hardheim 2 / JSG Tauberfr. 2 - JSG Neck-Obrig 2 / JSG Neck-Obrig 2 - ETSV Lauda",
+      "homeAway": "tag",
+      "opponent": "HSG Wim/Biber 2 (KO), HSG Wim/Biber 2 (FUN), TV Hardheim 2 (FUN), JSG Tauberfr. 2 (4+1), ETSV Lauda (4+1)",
+      "teamKey": "e2jugend"
     }
   },
   "meta": {
-    "lastRun": "2026-10-11T14:50:37.821+02:00",
+    "lastRun": "2026-10-11T20:25:30.302+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
