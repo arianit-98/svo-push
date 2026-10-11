@@ -28,6 +28,8 @@ const TOPICS = {
   b1:     { d4: "team_b1_d4",     d1: "team_b1_d1",     h1: "team_b1_h1" },
   d1jugend: { d4: "team_d1jugend_d4", d1: "team_d1jugend_d1", h1: "team_d1jugend_h1" },
   d2jugend: { d4: "team_d2jugend_d4", d1: "team_d2jugend_d1", h1: "team_d2jugend_h1" },
+  e1jugend: { d4: "team_e1jugend_d4", d1: "team_e1jugend_d1", h1: "team_e1jugend_h1" },
+  e2jugend: { d4: "team_e2jugend_d4", d1: "team_e2jugend_d1", h1: "team_e2jugend_h1" },
 };
 
 // Offsets (Presets)
@@ -266,6 +268,98 @@ async function sendResultIfDue(feed, game, eventKey, now, resultsSince) {
   markSent(id);
 }
 
+// ====== Spieltage (E-Jugend, feed.spieltag) ======
+// Unsere Spiele eines Tages, nach Anpfiff sortiert: [{ datum: "2026-10-24", spiele: [...] }]
+function spieltage(games) {
+  const tage = new Map();
+  for (const g of [...games].sort((a, b) => a.start - b.start)) {
+    const datum = g.start.toISODate();
+    if (!tage.has(datum)) tage.set(datum, []);
+    tage.get(datum).push(g);
+  }
+  return [...tage].map(([datum, spiele]) => ({ datum, spiele }));
+}
+
+// "TSV Weinsberg (KO)"
+function gegnerMitArt(g) {
+  return g.comment ? `${g.opponent} (${g.comment})` : g.opponent;
+}
+
+// Ein Spieltag als ein Ereignis für Erinnerungen und Verlegungen: Anpfiff und Halle des ersten Spiels
+function spieltagEreignisse(feed, games) {
+  return spieltage(games).map(({ datum, spiele }) => {
+    const erstes = spiele[0];
+    return {
+      uid: `h4a-tag|${feed.teamKey}|${datum}`,
+      start: erstes.start,
+      location: erstes.location,
+      summary: `Spieltag ${datum}: ${spiele.map((g) => g.summary).join(" / ")}`,
+      homeAway: "tag",
+      opponent: spiele.map(gegnerMitArt).join(", "),
+      anzahl: spiele.length,
+      homeGoals: null,
+      guestGoals: null,
+      spieltag: true,
+    };
+  });
+}
+
+function spieltagTitel(feed) {
+  return `🤾 ${feed.teamLabel} – Spieltag 💛💙`;
+}
+
+function spieltagText(ereignis) {
+  const dt = ereignis.start.setZone(TZ);
+  const lines = [`${dt.setLocale("de").toFormat("ccc")}, ${formatDate(dt)} ab ${formatTime(dt)} Uhr`];
+  const loc = norm(ereignis.location);
+  if (loc) lines.push(loc);
+  lines.push(`${ereignis.anzahl} ${ereignis.anzahl === 1 ? "Spiel" : "Spiele"}: ${ereignis.opponent}`);
+  return lines.join("\n");
+}
+
+// Ergebnis-Zusammenfassung eines Spieltags: sobald alle Spiele ein Ergebnis haben (frühestens
+// resultMinMinutes nach dem letzten Anpfiff), sonst nach Mitternacht mit den vorhandenen
+// (KO-Spiele bekommen oft keins). Spätestens RESULT_MAX_HOURS nach dem letzten Spiel.
+async function sendSpieltagErgebnisse(feed, games, now, resultsSince) {
+  for (const { datum, spiele } of spieltage(games)) {
+    const erstes = spiele[0].start, letztes = spiele[spiele.length - 1].start;
+    if (erstes < resultsSince) continue;
+    if (now > letztes.plus({ hours: RESULT_MAX_HOURS })) continue;
+    if (spiele.some((g) => g.live)) continue;
+    const mit = spiele.filter((g) => g.homeGoals !== null && g.guestGoals !== null);
+    if (!mit.length) continue;
+    const alle = mit.length === spiele.length && now >= letztes.plus({ minutes: feed.resultMinMinutes });
+    const tagVorbei = now >= erstes.startOf("day").plus({ days: 1 });
+    if (!alle && !tagVorbei) continue;
+
+    const id = `result-tag|${feed.teamKey}|${datum}`;
+    if (wasSent(id)) continue;
+
+    let s = 0, u = 0, n = 0;
+    const zeilen = mit.map((g) => {
+      const us = g.homeAway === "home" ? g.homeGoals : g.guestGoals;
+      const them = g.homeAway === "home" ? g.guestGoals : g.homeGoals;
+      if (us > them) s++; else if (us < them) n++; else u++;
+      const heim = g.homeAway === "home" ? feed.clubShort : g.opponent;
+      const gast = g.homeAway === "home" ? g.opponent : feed.clubShort;
+      return `${heim} – ${gast} ${g.homeGoals}:${g.guestGoals}${g.comment ? ` (${g.comment})` : ""}`;
+    });
+    const bilanz = [s && `${s} ${s === 1 ? "Sieg" : "Siege"}`, u && `${u} Unentschieden`,
+      n && `${n} ${n === 1 ? "Niederlage" : "Niederlagen"}`].filter(Boolean).join(", ");
+    const title = `🏁 ${feed.teamLabel} – Spieltag ${erstes.setZone(TZ).toFormat("dd.LL.")} 💛💙`;
+
+    console.log(`RESULT-TAG -> ${feed.teamKey} ${datum} (${mit.length}/${spiele.length} Ergebnisse)`);
+    await sendPush(
+      { condition: anyTopicCondition(Object.values(TOPICS[feed.teamKey])) },
+      title,
+      [bilanz, ...zeilen].join("\n"),
+      { kind: "result_spieltag", team: feed.teamKey, datum, ...linkData(feed) },
+      makeCollapseId("result-tag", feed.teamKey, datum)
+    );
+    markSent(id);
+  }
+}
+
 // "deeplink" öffnet die App (ab Version 1.1) nativ. Bewusst kein "url"-Feld mehr: das hat der alte
 // pushNotificationActionPerformed-Listener auf der Startseite gelesen und konnte so später
 // nochmal zur Seite einer alten Push springen.
@@ -470,6 +564,12 @@ async function processAdminQueue(now) {
 
     console.log(`  ${games.length} games found for ${feed.teamKey}`);
 
+    // E-Jugend: Ergebnisse als Zusammenfassung pro Spieltag, Erinnerungen pro Spieltag
+    if (feed.spieltag) {
+      await sendSpieltagErgebnisse(feed, games, now, resultsSince);
+      games = spieltagEreignisse(feed, games);
+    }
+
     for (const game of games) {
       const { start, summary, location, uid, homeAway, opponent } = game;
 
@@ -501,10 +601,14 @@ async function processAdminQueue(now) {
         const homeAwayChanged = prev.homeAway !== currentSnapshot.homeAway;
 
         if (kickoffChanged || locationChanged || homeAwayChanged) {
-          const placeEmoji = currentSnapshot.homeAway === "home" ? "🏠" : "✈️";
-          const title = `🔁 ${placeEmoji} Spiel verlegt – ${feed.teamLabel} 💛💙`;
+          const placeEmoji = currentSnapshot.homeAway === "home" ? "🏠" : currentSnapshot.homeAway === "tag" ? "🤾" : "✈️";
+          const title = game.spieltag
+            ? `🔁 ${placeEmoji} Spieltag verlegt – ${feed.teamLabel} 💛💙`
+            : `🔁 ${placeEmoji} Spiel verlegt – ${feed.teamLabel} 💛💙`;
 
-          const line1 = makeMatchupLine(feed, currentSnapshot.homeAway, currentSnapshot.opponent);
+          const line1 = game.spieltag
+            ? `Spiele: ${currentSnapshot.opponent}`
+            : makeMatchupLine(feed, currentSnapshot.homeAway, currentSnapshot.opponent);
 
           const prevDT = DateTime.fromISO(prev.kickoff, { zone: TZ });
           const currDT = start;
@@ -572,8 +676,8 @@ async function processAdminQueue(now) {
 
         const topic = TOPICS[feed.teamKey][off.key];
 
-        const title = makeTitle(feed, homeAway);
-        const body = makeBody(feed, homeAway, opponent, start, location);
+        const title = game.spieltag ? spieltagTitel(feed) : makeTitle(feed, homeAway);
+        const body = game.spieltag ? spieltagText(game) : makeBody(feed, homeAway, opponent, start, location);
 
         console.log(`SENDING -> topic=${topic} id=${id} fireAt=${fireAt.toISO()}`);
 
