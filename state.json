@@ -901,10 +901,18 @@
       "homeAway": "tag",
       "opponent": "HSG Wim/Biber 2 (KO), HSG Wim/Biber 2 (FUN), TV Hardheim 2 (FUN), JSG Tauberfr. 2 (4+1), ETSV Lauda (4+1)",
       "teamKey": "e2jugend"
+    },
+    "aDRhfDkzOTA3NTE": {
+      "kickoff": "2027-04-10T18:00:00.000+02:00",
+      "location": "Langhanshalle, Albert-Einstein-Straße 20, D-71717 Beilstein",
+      "summary": "SG SchoBott 2 - SV Obrigheim",
+      "homeAway": "away",
+      "opponent": "SG SchoBott 2",
+      "teamKey": "herren"
     }
   },
   "meta": {
-    "lastRun": "2026-10-12T12:00:57.428+02:00",
+    "lastRun": "2026-10-12T18:01:00.694+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
