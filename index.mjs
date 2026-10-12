@@ -268,6 +268,26 @@ async function sendResultIfDue(feed, game, eventKey, now, resultsSince) {
   markSent(id);
 }
 
+// "Liveticker läuft": einmal pro Spiel, sobald Handball4all für das Spiel live meldet (höchstens
+// 3 h nach Anpfiff, falls ein Ticker nie geschlossen wird). An alle, die mindestens eine Erinnerung
+// des Teams haben; die Push öffnet die Team-Seite mit dem Knopf "Zum Liveticker".
+async function sendLiveIfDue(feed, game, eventKey, now) {
+  if (!game.live || game.spieltag) return;
+  if (now < game.start.minus({ minutes: 30 }) || now > game.start.plus({ hours: 3 })) return;
+  const id = `live|${feed.teamKey}|${eventKey}`;
+  if (wasSent(id)) return;
+
+  console.log(`LIVE -> ${feed.teamKey} event=${eventKey}`);
+  await sendPush(
+    { condition: anyTopicCondition(Object.values(TOPICS[feed.teamKey])) },
+    `🔴 ${feed.teamLabel} – Liveticker läuft 💛💙`,
+    `${makeMatchupLine(feed, game.homeAway, game.opponent)}\nJetzt live verfolgen`,
+    { kind: "live", team: feed.teamKey, eventKey, ...linkData(feed) },
+    makeCollapseId("live", feed.teamKey, eventKey)
+  );
+  markSent(id);
+}
+
 // ====== Spieltage (E-Jugend, feed.spieltag) ======
 // Unsere Spiele eines Tages, nach Anpfiff sortiert: [{ datum: "2026-10-24", spiele: [...] }]
 function spieltage(games) {
@@ -578,6 +598,7 @@ async function processAdminQueue(now) {
 
       // Ergebnis kommt oft erst Stunden nach dem Spiel, deshalb vor dem 6-Stunden-Filter
       await sendResultIfDue(feed, game, eventKey, now, resultsSince);
+      await sendLiveIfDue(feed, game, eventKey, now);
 
       if (start < now.minus({ hours: 6 })) continue;
       if (start > lookahead) continue;
