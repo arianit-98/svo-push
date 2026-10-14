@@ -84,7 +84,8 @@
     "herren|h1|aDRhfDkzOTAyODE|2026-10-10T19:00:00.000+02:00|Sporthalle in der Au, Beihinger Straße 70, D-71726 Benningen|away": true,
     "result|herren|aDRhfDkzOTAyODE": true,
     "result-tag|e2jugend|2026-10-11": true,
-    "d2jugend|d4|aDRhfDk2Mzg2NjY|2026-10-18T13:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
+    "d2jugend|d4|aDRhfDk2Mzg2NjY|2026-10-18T13:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
+    "c1|d4|aDRhfDk1OTIyMjE|2026-10-18T14:25:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -913,7 +914,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-10-14T13:01:05.661+02:00",
+    "lastRun": "2026-10-14T14:25:31.662+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
