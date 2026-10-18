@@ -98,7 +98,8 @@
     "result|d2jugend|aDRhfDk2Mzg2NjY": true,
     "live|c1|aDRhfDk1OTIyMjE": true,
     "herren2|h1|aDRhfDk0NTAzMDY|2026-10-18T16:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "result|c1|aDRhfDk1OTIyMjE": true
+    "result|c1|aDRhfDk1OTIyMjE": true,
+    "live|herren2|aDRhfDk0NTAzMDY": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -927,7 +928,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-10-18T15:35:36.005+02:00",
+    "lastRun": "2026-10-18T16:05:34.352+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
