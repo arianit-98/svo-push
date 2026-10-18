@@ -95,7 +95,8 @@
     "d2jugend|h1|aDRhfDk2Mzg2NjY|2026-10-18T13:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "live|d2jugend|aDRhfDk2Mzg2NjY": true,
     "c1|h1|aDRhfDk1OTIyMjE|2026-10-18T14:25:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "result|d2jugend|aDRhfDk2Mzg2NjY": true
+    "result|d2jugend|aDRhfDk2Mzg2NjY": true,
+    "live|c1|aDRhfDk1OTIyMjE": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -924,7 +925,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-10-18T14:05:30.840+02:00",
+    "lastRun": "2026-10-18T14:30:49.359+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
