@@ -99,7 +99,8 @@
     "live|c1|aDRhfDk1OTIyMjE": true,
     "herren2|h1|aDRhfDk0NTAzMDY|2026-10-18T16:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "result|c1|aDRhfDk1OTIyMjE": true,
-    "live|herren2|aDRhfDk0NTAzMDY": true
+    "live|herren2|aDRhfDk0NTAzMDY": true,
+    "herren|h1|aDRhfDkzOTAzMDE|2026-10-18T18:00:00.000+02:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -928,7 +929,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-10-18T16:05:34.352+02:00",
+    "lastRun": "2026-10-18T17:00:57.917+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
