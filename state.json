@@ -929,10 +929,18 @@
       "homeAway": "away",
       "opponent": "SG SchoBott 2",
       "teamKey": "herren"
+    },
+    "aDRhfDkzOTA4NDE": {
+      "kickoff": "2027-04-17T18:00:00.000+02:00",
+      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "summary": "SV Obrigheim - TSV Buchen",
+      "homeAway": "home",
+      "opponent": "TSV Buchen",
+      "teamKey": "herren"
     }
   },
   "meta": {
-    "lastRun": "2026-10-19T13:50:38.051+02:00",
+    "lastRun": "2026-10-19T18:00:59.198+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
