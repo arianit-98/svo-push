@@ -8,6 +8,9 @@ const topic = (process.env.TOPIC || "svo_test").trim();
 const title = (process.env.TITLE || "SVO Push Test ✅").trim();
 const body = (process.env.BODY || "Wenn du das siehst, funktioniert GitHub → Firebase → Handy.").trim();
 const deeplink = (process.env.DEEPLINK || "").trim();
+// "live_stand"/"live_ende": Beispiel-Spielstand als Datennachricht wie von sendLiveStand (App ab 1.11)
+const art = (process.env.ART || "normal").trim();
+const stand = (process.env.STAND || "12:10").trim();
 
 if (!/^svo_test[a-z0-9_]*$/.test(topic)) {
   console.error(`Topic "${topic}" nicht erlaubt – nur Test-Topics, die mit "svo_test" beginnen.`);
@@ -24,10 +27,24 @@ const serviceAccount = JSON.parse(
 
 initializeApp({ credential: cert(serviceAccount) });
 
-await getMessaging().send({
-  topic,
-  notification: { title, body },
-  data: { kind: "test", ...(deeplink ? { deeplink } : {}) },
-});
-
-console.log("Sent test push to", topic, deeplink ? `(deeplink ${deeplink})` : "");
+if (art === "live_stand" || art === "live_ende") {
+  const [heimTore, gastTore] = stand.split(":");
+  await getMessaging().send({
+    topic,
+    data: {
+      kind: art, team: "svo_test", teamLabel: "Test", eventKey: "test",
+      heim: "SV Obrigheim", gast: "HSG Hohenlohe", heimTore, gastTore,
+      ticker: "https://spo.handball4all.de/service/ticker.html?appid=test&token=test",
+      deeplink: deeplink || "https://svohandball.de/de/app/herren.php",
+    },
+    android: { priority: "high", ttl: 10 * 60 * 1000 },
+  });
+  console.log("Sent", art, stand, "to", topic);
+} else {
+  await getMessaging().send({
+    topic,
+    notification: { title, body },
+    data: { kind: "test", ...(deeplink ? { deeplink } : {}) },
+  });
+  console.log("Sent test push to", topic, deeplink ? `(deeplink ${deeplink})` : "");
+}

@@ -25,6 +25,17 @@ on:
         description: "Optional: Link, der beim Antippen geöffnet wird (https://svohandball.de/...)"
         required: false
         type: string
+      art:
+        description: "normal = Benachrichtigung; live_stand/live_ende = Live-Spielstand (App ab 1.11)"
+        required: false
+        default: "normal"
+        type: choice
+        options: [normal, live_stand, live_ende]
+      stand:
+        description: "Spielstand für live_stand/live_ende"
+        required: false
+        default: "12:10"
+        type: string
 
 permissions:
   contents: read
@@ -51,4 +62,6 @@ jobs:
           TITLE: ${{ inputs.title }}
           BODY: ${{ inputs.body }}
           DEEPLINK: ${{ inputs.deeplink }}
+          ART: ${{ inputs.art }}
+          STAND: ${{ inputs.stand }}
         run: node test-push.mjs

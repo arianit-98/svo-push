@@ -4,6 +4,7 @@ import { DateTime } from "luxon";
 import { initializeApp, cert } from "firebase-admin/app";
 import { getMessaging } from "firebase-admin/messaging";
 import { FEEDS, H4A_URL } from "./feeds.mjs";   // Teams und Liga-IDs
+import { liveAktion, liveStand } from "./live.mjs";
 
 const TZ = "Europe/Berlin";
 const STATE_PATH = "./state.json";
@@ -19,6 +20,10 @@ const FETCH_TIMEOUT_MS = 15000;
 // Ergebnis-Push nach Spielende
 // Wird das Ergebnis erst später eingetragen, schicken wir es noch bis so lange nach Anpfiff
 const RESULT_MAX_HOURS = 48;
+
+// Live-Spielstand (App ab 1.11, Topic live_<team>, siehe sendLiveStand und live.mjs). Die App blendet
+// ihn nach 20 min ohne Nachricht aus. Nachrichten, die länger als LIVE_TTL_SECONDS unterwegs wären, verfallen.
+const LIVE_TTL_SECONDS = 10 * 60;
 
 // Topics pro Team + Offset (muss zu push.php auf svohandball.de passen)
 const TOPICS = {
@@ -118,15 +123,16 @@ if (!DRY_RUN) {
 }
 
 // ====== State laden ======
-let state = { sent: {}, events: {}, meta: {} };
+let state = { sent: {}, events: {}, meta: {}, live: {} };
 if (fs.existsSync(STATE_PATH)) {
   try {
     state = JSON.parse(fs.readFileSync(STATE_PATH, "utf8"));
     state.sent ||= {};
     state.events ||= {};
     state.meta ||= {};
+    state.live ||= {};
   } catch {
-    state = { sent: {}, events: {}, meta: {} };
+    state = { sent: {}, events: {}, meta: {}, live: {} };
   }
 } else {
   fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
@@ -134,7 +140,7 @@ if (fs.existsSync(STATE_PATH)) {
 
 function contentSnapshot() {
   // resultsSince gehört dazu, sonst würde es beim ersten Lauf nicht gespeichert
-  return JSON.stringify({ sent: state.sent, events: state.events, resultsSince: state.meta.resultsSince });
+  return JSON.stringify({ sent: state.sent, events: state.events, live: state.live, resultsSince: state.meta.resultsSince });
 }
 const initialSnapshot = contentSnapshot();
 
@@ -195,8 +201,17 @@ async function loadGames(feed) {
       .join(" ");
     const location = [norm(g.gGymnasiumName), norm(g.gGymnasiumStreet), town].filter(Boolean).join(", ");
 
+    // Liveticker: gAppid/gToken sind leer, solange es für das Spiel keinen Ticker gibt
+    const token = norm(g.gToken);
+    const ticker = token
+      ? `https://spo.handball4all.de/service/ticker.html?appid=${encodeURIComponent(norm(g.gAppid))}&token=${encodeURIComponent(token)}`
+      : "";
+
     games.push({
       uid: `h4a|${id}`,
+      homeTeam,
+      guestTeam,
+      ticker,
       start,
       summary: `${homeTeam} - ${guestTeam}`,
       location,
@@ -286,6 +301,40 @@ async function sendLiveIfDue(feed, game, eventKey, now) {
     makeCollapseId("live", feed.teamKey, eventKey)
   );
   markSent(id);
+}
+
+// Live-Spielstand für die App: stille Datennachricht (ohne notification) an live_<team>, angezeigt von
+// LiveSpielstand.java als laufende Benachrichtigung bzw. Live Update ab Android 16. Das Topic
+// abonniert nur, wer auf /de/app/ den Schalter "Live-Spielstand" einschaltet; Web-Push (iPhone) und
+// ältere App-Versionen bekommen nichts davon mit. Solange H4A live meldet, jeder Lauf mit neuem Stand
+// (sonst alle LIVE_ERNEUERN_MINUTES), danach einmal "live_ende" mit dem letzten Stand.
+async function sendLiveStand(feed, game, eventKey, now) {
+  const art = liveAktion(state.live[eventKey], game, now);
+  if (!art) return;
+  const stand = liveStand(game);
+
+  console.log(`LIVESTAND -> ${feed.teamKey} event=${eventKey} ${stand} (${art})`);
+  await sendData(`live_${feed.teamKey}`, {
+    kind: art,
+    team: feed.teamKey,
+    teamLabel: feed.teamLabel,
+    eventKey,
+    heim: game.homeTeam,
+    gast: game.guestTeam,
+    heimTore: game.homeGoals ?? 0,
+    gastTore: game.guestGoals ?? 0,
+    ticker: game.ticker,
+    ...linkData(feed),
+  });
+  state.live[eventKey] = { stand, at: now.toISO(), ...(art === "live_ende" ? { ende: true } : {}) };
+}
+
+// Alte Live-Einträge nach zwei Tagen wegräumen
+function liveAufraeumen(now) {
+  for (const [key, v] of Object.entries(state.live)) {
+    const at = DateTime.fromISO(v.at, { zone: TZ });
+    if (!at.isValid || at < now.minus({ days: 2 })) delete state.live[key];
+  }
 }
 
 // ====== Spieltage (E-Jugend, feed.spieltag) ======
@@ -446,6 +495,20 @@ async function sendPush(target, title, body, data = {}, collapseId = null) {
   if (VALIDATE_ONLY) console.log(`[VALIDATE_ONLY] von Firebase akzeptiert, nicht zugestellt: ${JSON.stringify(target)} "${title}"`);
 }
 
+// Reine Datennachricht (keine Anzeige durch das System), hohe Priorität, verfällt nach LIVE_TTL_SECONDS
+async function sendData(topic, data) {
+  const msg = {
+    topic,
+    data: Object.fromEntries(Object.entries(data).map(([k, v]) => [k, String(v)])),
+    android: { priority: "high", ttl: LIVE_TTL_SECONDS * 1000 },
+  };
+  if (DRY_RUN) {
+    console.log(`[DRY_RUN] ${JSON.stringify(msg)}`);
+    return;
+  }
+  await getMessaging().send(msg, VALIDATE_ONLY);
+}
+
 async function sendToTopic(topic, title, body, data = {}, collapseId = null) {
   await sendPush({ topic }, title, body, data, collapseId);
 }
@@ -599,6 +662,7 @@ async function processAdminQueue(now) {
       // Ergebnis kommt oft erst Stunden nach dem Spiel, deshalb vor dem 6-Stunden-Filter
       await sendResultIfDue(feed, game, eventKey, now, resultsSince);
       await sendLiveIfDue(feed, game, eventKey, now);
+      await sendLiveStand(feed, game, eventKey, now);
 
       if (start < now.minus({ hours: 6 })) continue;
       if (start > lookahead) continue;
@@ -719,6 +783,8 @@ async function processAdminQueue(now) {
       }
     }
   }
+
+  liveAufraeumen(now);
 
   // lastRun aktualisieren – aber nur speichern (= committen), wenn sich wirklich etwas geändert hat.
   // Sonst gäbe es beim 5-Minuten-Takt fast 300 Commits pro Tag. Ein älteres lastRun ist unkritisch:
