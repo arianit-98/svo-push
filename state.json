@@ -112,7 +112,8 @@
     "e1jugend|h1|aDRhLXRhZ3xlMWp1Z2VuZHwyMDI2LTEwLTI0|2026-10-24T11:00:00.000+02:00|Walter-Hohmann-Schulsporthalle, Bürgermeister-Henn-Straße, D-74736 Hardheim|tag": true,
     "result-tag|e1jugend|2026-10-24": true,
     "herren|d1|aDRhfDkzOTAzMjE|2026-10-25T15:00:00.000+01:00|Sporthalle, Uhlandstraße, D-74229 Oedheim|away": true,
-    "herren2|h1|aDRhfDk0NTAyOTY|2026-10-24T17:15:00.000+02:00|Walter-Hohmann-Schulsporthalle, Bürgermeister-Henn-Straße, D-74736 Hardheim|away": true
+    "herren2|h1|aDRhfDk0NTAyOTY|2026-10-24T17:15:00.000+02:00|Walter-Hohmann-Schulsporthalle, Bürgermeister-Henn-Straße, D-74736 Hardheim|away": true,
+    "live|herren2|aDRhfDk0NTAyOTY": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -949,7 +950,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-10-24T16:15:38.746+02:00",
+    "lastRun": "2026-10-24T17:20:41.501+02:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   }
 }
