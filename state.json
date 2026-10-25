@@ -116,7 +116,8 @@
     "live|herren2|aDRhfDk0NTAyOTY": true,
     "result|herren2|aDRhfDk0NTAyOTY": true,
     "herren|h1|aDRhfDkzOTAzMjE|2026-10-25T15:00:00.000+01:00|Sporthalle, Uhlandstraße, D-74229 Oedheim|away": true,
-    "live|herren|aDRhfDkzOTAzMjE": true
+    "live|herren|aDRhfDkzOTAzMjE": true,
+    "result|herren|aDRhfDkzOTAzMjE": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -953,7 +954,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-10-25T15:45:34.197+01:00",
+    "lastRun": "2026-10-25T16:40:37.261+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
