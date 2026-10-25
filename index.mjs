@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import { initializeApp, cert } from "firebase-admin/app";
 import { getMessaging } from "firebase-admin/messaging";
 import { FEEDS, H4A_URL } from "./feeds.mjs";   // Teams und Liga-IDs
-import { liveAktion, liveStand } from "./live.mjs";
+import { liveAktion, liveLaeuft, liveStand } from "./live.mjs";
 
 const TZ = "Europe/Berlin";
 const STATE_PATH = "./state.json";
@@ -24,6 +24,11 @@ const RESULT_MAX_HOURS = 48;
 // Live-Spielstand (App ab 1.11, Topic live_<team>, siehe sendLiveStand und live.mjs). Die App blendet
 // ihn nach 20 min ohne Nachricht aus. Nachrichten, die länger als LIVE_TTL_SECONDS unterwegs wären, verfallen.
 const LIVE_TTL_SECONDS = 10 * 60;
+// Läuft ein Spiel, bleibt der Lauf offen und fragt jede LIVE_TAKT_MS nur dessen Liga neu ab, bis
+// LIVE_SCHLEIFE_MINUTEN nach Laufbeginn. Der nächste Lauf (cron-job.org alle 5 min) wartet so lange in der
+// concurrency-Warteschlange und übernimmt danach. 1 Abfrage pro Minute und laufendem Spiel (GitHub-IP).
+const LIVE_TAKT_MS = 60 * 1000;
+const LIVE_SCHLEIFE_MINUTEN = 4;
 
 // Topics pro Team + Offset (muss zu push.php auf svohandball.de passen)
 const TOPICS = {
@@ -329,6 +334,32 @@ async function sendLiveStand(feed, game, eventKey, now) {
   state.live[eventKey] = { stand, at: now.toISO(), ...(art === "live_ende" ? { ende: true } : {}) };
 }
 
+async function liveSchleife(liveFeeds, laufStart) {
+  if (DRY_RUN || VALIDATE_ONLY) return;
+  const bis = laufStart.plus({ minutes: LIVE_SCHLEIFE_MINUTEN });
+  while (liveFeeds.size && DateTime.now().plus({ milliseconds: LIVE_TAKT_MS }) <= bis) {
+    await sleep(LIVE_TAKT_MS);
+    for (const feed of [...liveFeeds]) {
+      let games;
+      try {
+        games = await loadGames(feed);
+      } catch (e) {
+        console.log(`WARN: Live-Schleife ${feed.teamKey}: ${e?.message || e}`);
+        continue;
+      }
+      const jetzt = DateTime.now().setZone(TZ);
+      let laeuft = false;
+      for (const game of games) {
+        const eventKey = Buffer.from(game.uid).toString("base64url");
+        await sendLiveStand(feed, game, eventKey, jetzt);
+        laeuft ||= liveLaeuft(game, jetzt);
+      }
+      // Spiel vorbei: live_ende ist gerade verschickt, keine weiteren Abfragen für dieses Team
+      if (!laeuft) liveFeeds.delete(feed);
+    }
+  }
+}
+
 // Alte Live-Einträge nach zwei Tagen wegräumen
 function liveAufraeumen(now) {
   for (const [key, v] of Object.entries(state.live)) {
@@ -627,6 +658,7 @@ async function processAdminQueue(now) {
   await processAdminQueue(now);
 
   // 1) NORMALER SCHEDULER (Handball4all)
+  const liveFeeds = new Set(); // Teams mit laufendem Spiel, für die Live-Schleife (2)
   for (const feed of FEEDS) {
     if (!feed.classId) {
       console.log(`WARN: No classId configured for ${feed.teamKey}, skipping.`);
@@ -663,6 +695,7 @@ async function processAdminQueue(now) {
       await sendResultIfDue(feed, game, eventKey, now, resultsSince);
       await sendLiveIfDue(feed, game, eventKey, now);
       await sendLiveStand(feed, game, eventKey, now);
+      if (liveLaeuft(game, now)) liveFeeds.add(feed);
 
       if (start < now.minus({ hours: 6 })) continue;
       if (start > lookahead) continue;
@@ -783,6 +816,9 @@ async function processAdminQueue(now) {
       }
     }
   }
+
+  // 2) LIVE-SCHLEIFE: Spielstand jede Minute statt nur alle 5 Minuten
+  await liveSchleife(liveFeeds, now);
 
   liveAufraeumen(now);
 
