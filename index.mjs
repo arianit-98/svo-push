@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import { initializeApp, cert } from "firebase-admin/app";
 import { getMessaging } from "firebase-admin/messaging";
 import { FEEDS, H4A_URL } from "./feeds.mjs";   // Teams und Liga-IDs
-import { liveAktion, liveLaeuft, liveOffen } from "./live.mjs";
+import { liveAktion, liveLaeuft, liveOffen, halbzeitStand } from "./live.mjs";
 
 const TZ = "Europe/Berlin";
 const STATE_PATH = "./state.json";
@@ -262,7 +262,9 @@ async function sendResultIfDue(feed, game, eventKey, now, resultsSince) {
   const homeName = homeAway === "home" ? feed.clubShort : opponent;
   const guestName = homeAway === "home" ? opponent : feed.clubShort;
   const lines = [`${homeName} ${homeGoals}:${guestGoals} ${guestName}`];
-  if (game.homeGoalsHalf !== null && game.guestGoalsHalf !== null) {
+  // Halbzeit nur, wenn sie nicht schon als eigene Push kam (sendHalbzeitIfDue, nur mit Liveticker)
+  const halbzeitGesendet = wasSent(`halbzeit|${feed.teamKey}|${eventKey}`);
+  if (!halbzeitGesendet && game.homeGoalsHalf !== null && game.guestGoalsHalf !== null) {
     lines.push(`Halbzeit ${game.homeGoalsHalf}:${game.guestGoalsHalf}`);
   }
   if (game.comment) lines.push(game.comment);
@@ -284,6 +286,37 @@ async function sendResultIfDue(feed, game, eventKey, now, resultsSince) {
       ...linkData(feed),
     },
     makeCollapseId("result", feed.teamKey, eventKey)
+  );
+  markSent(id);
+}
+
+// Halbzeitstand: einmal pro Spiel an alle Abos des Teams (wie das Ergebnis), nur mit Liveticker, weil
+// H4A den Halbzeitstand sonst erst mit dem Endergebnis kennt. Erkennung in halbzeitStand (live.mjs).
+async function sendHalbzeitIfDue(feed, game, eventKey, now) {
+  const stand = halbzeitStand(state.live[eventKey], game, now, feed.resultMinMinutes);
+  if (!stand) return;
+  const id = `halbzeit|${feed.teamKey}|${eventKey}`;
+  if (wasSent(id)) return;
+
+  const [heimTore, gastTore] = stand.split(":");
+  const homeName = game.homeAway === "home" ? feed.clubShort : game.opponent;
+  const guestName = game.homeAway === "home" ? game.opponent : feed.clubShort;
+  console.log(`HALBZEIT -> ${feed.teamKey} event=${eventKey} ${stand}`);
+  await sendPush(
+    { condition: anyTopicCondition(Object.values(TOPICS[feed.teamKey])) },
+    `⏸️ Halbzeit – ${feed.teamLabel} 💛💙`,
+    `${homeName} ${stand} ${guestName}`,
+    {
+      kind: "halftime",
+      team: feed.teamKey,
+      eventKey,
+      homeAway: game.homeAway,
+      opponent: game.opponent,
+      homeGoals: heimTore,
+      guestGoals: gastTore,
+      ...linkData(feed),
+    },
+    makeCollapseId("halbzeit", feed.teamKey, eventKey)
   );
   markSent(id);
 }
@@ -352,6 +385,7 @@ async function liveSchleife(liveFeeds, laufStart) {
       let laeuft = false;
       for (const game of games) {
         const eventKey = Buffer.from(game.uid).toString("base64url");
+        await sendHalbzeitIfDue(feed, game, eventKey, jetzt);
         await sendLiveStand(feed, game, eventKey, jetzt);
         laeuft ||= liveLaeuft(game, jetzt) || liveOffen(state.live[eventKey], game, jetzt);
       }
@@ -695,6 +729,8 @@ async function processAdminQueue(now) {
       // Ergebnis kommt oft erst Stunden nach dem Spiel, deshalb vor dem 6-Stunden-Filter
       await sendResultIfDue(feed, game, eventKey, now, resultsSince);
       await sendLiveIfDue(feed, game, eventKey, now);
+      // Vor sendLiveStand: der Halbzeit-Push braucht den Live-Zustand, bevor er auf "Ende" geht
+      await sendHalbzeitIfDue(feed, game, eventKey, now);
       await sendLiveStand(feed, game, eventKey, now);
       if (liveLaeuft(game, now) || liveOffen(state.live[eventKey], game, now)) liveFeeds.add(feed);
 

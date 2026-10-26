@@ -1,7 +1,7 @@
 // Prüft liveAktion (live.mjs) ohne Handball4all und ohne Firebase: node scripts/live-test.mjs
 import assert from "node:assert/strict";
 import { DateTime } from "luxon";
-import { liveAktion } from "../live.mjs";
+import { liveAktion, halbzeitStand } from "../live.mjs";
 
 const start = DateTime.fromISO("2026-10-25T15:00:00+01:00");
 const spiel = (o) => ({ start, live: true, homeGoals: 12, guestGoals: 10, ...o });
@@ -28,3 +28,16 @@ assert.equal(art({ stand: "12:10", at: um(170).toISO() }, spiel(), um(185)), "li
 assert.equal(art(undefined, spiel(), um(-40)), null, "zu früh");
 assert.equal(art(undefined, spiel({ spieltag: true }), um(10)), null, "E-Jugend nie");
 console.log("live-test: alles ok");
+
+// Halbzeit-Push (halbzeitStand)
+const halb = (...a) => halbzeitStand(...a, 75);
+assert.equal(halb({ stand: "14:14", at: um(43).toISO() }, spiel(pause), um(45)), "14:14", "Pause: letzter Live-Stand");
+assert.equal(halb({ stand: "14:14", at: um(43).toISO() }, spiel({ ...pause, homeGoalsHalf: 15, guestGoalsHalf: 14 }), um(45)), "15:14", "Pause: Halbzeit-Tore vor Live-Stand");
+assert.equal(halb({ stand: "18:16", at: um(55).toISO() }, spiel({ homeGoalsHalf: 15, guestGoalsHalf: 14 }), um(56)), "15:14", "zweite Halbzeit mit Halbzeit-Toren");
+assert.equal(halb({ stand: "12:10", at: um(20).toISO() }, spiel(), um(25)), null, "läuft ohne Halbzeit-Tore");
+assert.equal(halb({ stand: "3:2", at: um(8).toISO() }, spiel(pause), um(10)), null, "Ticker-Aussetzer am Anfang");
+assert.equal(halb(undefined, spiel({ live: false, homeGoals: 32, guestGoals: 26, homeGoalsHalf: 15, guestGoalsHalf: 14 }), um(120)), null, "ohne Ticker: nur Endergebnis");
+assert.equal(halb({ stand: "32:26", at: um(95).toISO() }, spiel({ live: false, homeGoals: 32, guestGoals: 26, homeGoalsHalf: 15, guestGoalsHalf: 14 }), um(98)), null, "nach Spielende nicht");
+assert.equal(halb(undefined, spiel({ live: false }), um(40)), null, "nie live gewesen");
+assert.equal(halb({ stand: "14:14", at: um(43).toISO() }, spiel({ ...pause, spieltag: true }), um(45)), null, "E-Jugend nie");
+console.log("halbzeit-test: alles ok");

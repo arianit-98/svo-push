@@ -45,3 +45,27 @@ export function liveStand(game, vorher) {
   if (game.homeGoals === null || game.guestGoals === null) return vorher?.stand ?? "0:0";
   return `${game.homeGoals}:${game.guestGoals}`;
 }
+
+// Frühestens so lange nach Anpfiff gilt eine Ticker-Pause als Halbzeit (kürzeste Halbzeit 2x20 bei der
+// D-Jugend; davor wäre es eher ein Aussetzer des Tickers)
+export const HALBZEIT_AB_MINUTES = 15;
+
+// Halbzeitstand für den Halbzeit-Push (sendHalbzeitIfDue in index.mjs) oder null. Nur bei Spielen mit
+// Liveticker: ohne Ticker kommen Halbzeit und Endstand erst zusammen mit dem Spielbericht.
+// Erkannt wird die Halbzeit an
+//  - den Halbzeit-Toren von H4A (gHomeGoals_1), solange der Ticker noch läuft (zweite Halbzeit), oder
+//  - der Pause: H4A meldet vor endeAbMinuten nicht mehr live, die Live-Anzeige ist aber offen (vorher).
+//    Stand dann aus den Halbzeit-Toren, sonst den aktuellen, sonst dem zuletzt gesehenen Live-Stand.
+// Nach endeAbMinuten nie: dann sind die Halbzeit-Tore Teil des Endergebnisses.
+export function halbzeitStand(vorher, game, now, endeAbMinuten) {
+  if (game.spieltag) return null;
+  if (now < game.start.plus({ minutes: HALBZEIT_AB_MINUTES })) return null;
+  const halb = game.homeGoalsHalf !== null && game.homeGoalsHalf !== undefined &&
+    game.guestGoalsHalf !== null && game.guestGoalsHalf !== undefined
+    ? `${game.homeGoalsHalf}:${game.guestGoalsHalf}`
+    : null;
+
+  if (liveLaeuft(game, now)) return halb;
+  if (!vorher || vorher.ende || now >= game.start.plus({ minutes: endeAbMinuten })) return null;
+  return halb ?? liveStand(game, vorher);
+}
