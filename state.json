@@ -959,10 +959,18 @@
       "homeAway": "away",
       "opponent": "HSG Wim/Biber 2",
       "teamKey": "herren2"
+    },
+    "aDRhfDkzOTA4MTE": {
+      "kickoff": "2027-04-24T19:00:00.000+02:00",
+      "location": "Sporthalle Ost, Theodor-Heuss-Straße 6, D-70806 Kornwestheim",
+      "summary": "SV K'westheim 2 - SV Obrigheim",
+      "homeAway": "away",
+      "opponent": "SV K'westheim 2",
+      "teamKey": "herren"
     }
   },
   "meta": {
-    "lastRun": "2026-10-26T17:01:02.357+01:00",
+    "lastRun": "2026-10-26T19:00:59.252+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
