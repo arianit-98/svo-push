@@ -951,10 +951,18 @@
       "homeAway": "home",
       "opponent": "TSV Buchen",
       "teamKey": "herren"
+    },
+    "aDRhfDk0NTA0MjE": {
+      "kickoff": "2027-04-24T17:00:00.000+02:00",
+      "location": "Stauferhalle, Fronhäuserstraße 5, D-74206 Bad Wimpfen",
+      "summary": "HSG Wim/Biber 2 - SV Obrigheim 2",
+      "homeAway": "away",
+      "opponent": "HSG Wim/Biber 2",
+      "teamKey": "herren2"
     }
   },
   "meta": {
-    "lastRun": "2026-10-26T16:55:34.097+01:00",
+    "lastRun": "2026-10-26T17:01:02.357+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
