@@ -4,7 +4,7 @@ import { DateTime } from "luxon";
 import { initializeApp, cert } from "firebase-admin/app";
 import { getMessaging } from "firebase-admin/messaging";
 import { FEEDS, H4A_URL } from "./feeds.mjs";   // Teams und Liga-IDs
-import { liveAktion, liveLaeuft, liveStand } from "./live.mjs";
+import { liveAktion, liveLaeuft, liveOffen } from "./live.mjs";
 
 const TZ = "Europe/Berlin";
 const STATE_PATH = "./state.json";
@@ -314,9 +314,10 @@ async function sendLiveIfDue(feed, game, eventKey, now) {
 // ältere App-Versionen bekommen nichts davon mit. Solange H4A live meldet, jeder Lauf mit neuem Stand
 // (sonst alle LIVE_ERNEUERN_MINUTES), danach einmal "live_ende" mit dem letzten Stand.
 async function sendLiveStand(feed, game, eventKey, now) {
-  const art = liveAktion(state.live[eventKey], game, now);
-  if (!art) return;
-  const stand = liveStand(game);
+  const aktion = liveAktion(state.live[eventKey], game, now, feed.resultMinMinutes);
+  if (!aktion) return;
+  const { art, stand } = aktion;
+  const [heimTore, gastTore] = stand.split(":");
 
   console.log(`LIVESTAND -> ${feed.teamKey} event=${eventKey} ${stand} (${art})`);
   await sendData(`live_${feed.teamKey}`, {
@@ -326,8 +327,8 @@ async function sendLiveStand(feed, game, eventKey, now) {
     eventKey,
     heim: game.homeTeam,
     gast: game.guestTeam,
-    heimTore: game.homeGoals ?? 0,
-    gastTore: game.guestGoals ?? 0,
+    heimTore,
+    gastTore,
     ticker: game.ticker,
     ...linkData(feed),
   });
@@ -352,9 +353,9 @@ async function liveSchleife(liveFeeds, laufStart) {
       for (const game of games) {
         const eventKey = Buffer.from(game.uid).toString("base64url");
         await sendLiveStand(feed, game, eventKey, jetzt);
-        laeuft ||= liveLaeuft(game, jetzt);
+        laeuft ||= liveLaeuft(game, jetzt) || liveOffen(state.live[eventKey], game, jetzt);
       }
-      // Spiel vorbei: live_ende ist gerade verschickt, keine weiteren Abfragen für dieses Team
+      // Spiel vorbei (live_ende verschickt): keine weiteren Abfragen für dieses Team. In der Halbzeit weiter.
       if (!laeuft) liveFeeds.delete(feed);
     }
   }
@@ -695,7 +696,7 @@ async function processAdminQueue(now) {
       await sendResultIfDue(feed, game, eventKey, now, resultsSince);
       await sendLiveIfDue(feed, game, eventKey, now);
       await sendLiveStand(feed, game, eventKey, now);
-      if (liveLaeuft(game, now)) liveFeeds.add(feed);
+      if (liveLaeuft(game, now) || liveOffen(state.live[eventKey], game, now)) liveFeeds.add(feed);
 
       if (start < now.minus({ hours: 6 })) continue;
       if (start > lookahead) continue;
