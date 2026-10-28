@@ -118,7 +118,8 @@
     "herren|h1|aDRhfDkzOTAzMjE|2026-10-25T15:00:00.000+01:00|Sporthalle, Uhlandstraße, D-74229 Oedheim|away": true,
     "live|herren|aDRhfDkzOTAzMjE": true,
     "result|herren|aDRhfDkzOTAzMjE": true,
-    "d2jugend|d4|aDRhfDk2Mzg3MTY|2026-10-31T13:00:00.000+01:00|Stauferhalle, Fronhäuserstraße 5, D-74206 Bad Wimpfen|away": true
+    "d2jugend|d4|aDRhfDk2Mzg3MTY|2026-10-31T13:00:00.000+01:00|Stauferhalle, Fronhäuserstraße 5, D-74206 Bad Wimpfen|away": true,
+    "d1jugend|d4|aDRhfDk1OTk3NzY|2026-11-01T16:15:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -971,7 +972,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-10-28T16:01:04.158+01:00",
+    "lastRun": "2026-10-28T16:15:39.612+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {}
