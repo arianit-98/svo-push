@@ -123,7 +123,8 @@
     "herren|d4|aDRhfDkzOTAzNDE|2026-11-01T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "d2jugend|d1|aDRhfDk2Mzg3MTY|2026-10-31T13:00:00.000+01:00|Stauferhalle, Fronhäuserstraße 5, D-74206 Bad Wimpfen|away": true,
     "d2jugend|h1|aDRhfDk2Mzg3MTY|2026-10-31T13:00:00.000+01:00|Stauferhalle, Fronhäuserstraße 5, D-74206 Bad Wimpfen|away": true,
-    "live|d2jugend|aDRhfDk2Mzg3MTY": true
+    "live|d2jugend|aDRhfDk2Mzg3MTY": true,
+    "halbzeit|d2jugend|aDRhfDk2Mzg3MTY": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -976,13 +977,13 @@
     }
   },
   "meta": {
-    "lastRun": "2026-10-31T13:40:40.838+01:00",
+    "lastRun": "2026-10-31T13:45:41.112+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
     "aDRhfDk2Mzg3MTY": {
-      "stand": "15:8",
-      "at": "2026-10-31T13:43:51.586+01:00"
+      "stand": "16:8",
+      "at": "2026-10-31T13:46:49.009+01:00"
     }
   }
 }
