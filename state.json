@@ -133,7 +133,8 @@
     "live|d1jugend|aDRhfDk1OTk3NzY": true,
     "herren|h1|aDRhfDkzOTAzNDE|2026-11-01T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "result|d1jugend|aDRhfDk1OTk3NzY": true,
-    "live|herren|aDRhfDkzOTAzNDE": true
+    "live|herren|aDRhfDkzOTAzNDE": true,
+    "halbzeit|herren|aDRhfDkzOTAzNDE": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -986,7 +987,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-01T18:35:30.098+01:00",
+    "lastRun": "2026-11-01T18:45:35.883+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
@@ -1001,8 +1002,8 @@
       "ende": true
     },
     "aDRhfDkzOTAzNDE": {
-      "stand": "11:15",
-      "at": "2026-11-01T18:36:39.694+01:00"
+      "stand": "12:15",
+      "at": "2026-11-01T18:48:48.076+01:00"
     }
   }
 }
