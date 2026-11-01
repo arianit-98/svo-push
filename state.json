@@ -127,7 +127,8 @@
     "halbzeit|d2jugend|aDRhfDk2Mzg3MTY": true,
     "result|d2jugend|aDRhfDk2Mzg3MTY": true,
     "d1jugend|d1|aDRhfDk1OTk3NzY|2026-11-01T16:15:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
-    "herren|d1|aDRhfDkzOTAzNDE|2026-11-01T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true
+    "herren|d1|aDRhfDkzOTAzNDE|2026-11-01T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
+    "reloc|e2jugend|aDRhLXRhZ3xlMmp1Z2VuZHwyMDI3LTAxLTI0|2027-01-24T11:00:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|tag": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -924,7 +925,7 @@
     },
     "aDRhLXRhZ3xlMmp1Z2VuZHwyMDI3LTAxLTI0": {
       "kickoff": "2027-01-24T11:00:00.000+01:00",
-      "location": "Neckarhalle, Am Park 8, D-74847 Obrigheim",
+      "location": "Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz",
       "summary": "Spieltag 2027-01-24: Bad Rappenau 2 - JSG Neck-Obrig 2 / Bad Rappenau 2 - JSG Neck-Obrig 2 / JSG Neck-Obrig 2 - TV Mosbach 2 / SC Züttlingen - JSG Neck-Obrig 2 / JSG Neck-Obrig 2 - JSG Tauberfr. 2",
       "homeAway": "tag",
       "opponent": "Bad Rappenau 2 (KO), Bad Rappenau 2 (FUN), TV Mosbach 2 (FUN), SC Züttlingen (4+1), JSG Tauberfr. 2 (4+1)",
@@ -980,7 +981,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-01T06:05:30.275+01:00",
+    "lastRun": "2026-11-01T09:55:29.464+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
