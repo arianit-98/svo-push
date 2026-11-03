@@ -135,7 +135,8 @@
     "result|d1jugend|aDRhfDk1OTk3NzY": true,
     "live|herren|aDRhfDkzOTAzNDE": true,
     "halbzeit|herren|aDRhfDkzOTAzNDE": true,
-    "result|herren|aDRhfDkzOTAzNDE": true
+    "result|herren|aDRhfDkzOTAzNDE": true,
+    "d2jugend|d4|aDRhfDk2Mzg4NDY|2026-11-07T11:00:00.000+01:00|Creutzfelder Sporthalle, Pestalozzistraße 20, D-74629 Pfedelbach|away": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -988,7 +989,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-03T08:05:32.306+01:00",
+    "lastRun": "2026-11-03T11:01:05.799+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
