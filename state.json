@@ -146,7 +146,8 @@
     "d1jugend|h1|aDRhfDk1OTk4MjE|2026-11-07T14:30:00.000+01:00|Sporthalle, Oststraße 53, D-74831 Gundelsheim|away": true,
     "live|d1jugend|aDRhfDk1OTk4MjE": true,
     "b1|h1|aDRhfDk1OTA4NDY|2026-11-07T16:15:00.000+01:00|SportCentrum, August-Thalheimer-Straße, D-74182 Obersulm|away": true,
-    "result|d1jugend|aDRhfDk1OTk4MjE": true
+    "result|d1jugend|aDRhfDk1OTk4MjE": true,
+    "live|b1|aDRhfDk1OTA4NDY": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -999,7 +1000,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-07T15:35:28.852+01:00",
+    "lastRun": "2026-11-07T16:20:39.445+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
@@ -1007,6 +1008,10 @@
       "stand": "40:36",
       "at": "2026-11-07T15:34:07.944+01:00",
       "ende": true
+    },
+    "aDRhfDk1OTA4NDY": {
+      "stand": "5:2",
+      "at": "2026-11-07T16:23:53.268+01:00"
     }
   }
 }
