@@ -1,3 +1,13 @@
 {
-  "items": []
+  "items": [
+    {
+      "id": "admin|2026-11-09T19:00:00.000+01:00|🔥 Es ist Neckar-Derby-Woche!|Samstag, 20 Uhr: Germanen gegen Piranhas, zum ersten Mal in der Landesliga. Alle Infos zum Derby hier.",
+      "sendAt": "2026-11-09T19:00:00.000+01:00",
+      "title": "🔥 Es ist Neckar-Derby-Woche!",
+      "body": "Samstag, 20 Uhr: Germanen gegen Piranhas, zum ersten Mal in der Landesliga. Alle Infos zum Derby hier.",
+      "topic": "all",
+      "deeplink": "https://svohandball.de/de/app/derby.php",
+      "createdAt": "2026-11-09T07:54:10.953+01:00"
+    }
+  ]
 }
