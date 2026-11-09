@@ -8,6 +8,15 @@
       "topic": "all",
       "deeplink": "https://svohandball.de/de/app/derby.php",
       "createdAt": "2026-11-09T07:54:10.953+01:00"
+    },
+    {
+      "id": "admin|2026-11-14T09:00:00.000+01:00|🔥 Heute ist Neckar-Derby!|Erst die Jugend, am Abend das Neckar-Derby: HA Neckarelz – SV Obrigheim, 20:00 Uhr in der Pattberghalle.",
+      "sendAt": "2026-11-14T09:00:00.000+01:00",
+      "title": "🔥 Heute ist Neckar-Derby!",
+      "body": "Erst die Jugend, am Abend das Neckar-Derby: HA Neckarelz – SV Obrigheim, 20:00 Uhr in der Pattberghalle.",
+      "topic": "all",
+      "deeplink": "https://svohandball.de/de/app/derby.php",
+      "createdAt": "2026-11-09T07:54:38.606+01:00"
     }
   ]
 }
