@@ -12,8 +12,15 @@ const TITLE = (process.env.TITLE || "").trim();
 const BODY = (process.env.BODY || "").trim();
 const SEND_AT = (process.env.SEND_AT || "").trim(); // "YYYY-MM-DDTHH:MM" oder "DD.MM.YYYY HH:MM" (Berlin) oder leer
 
+const DEEPLINK = (process.env.DEEPLINK || "").trim(); // optional: Seite beim Antippen
+
 if (!TITLE || !BODY) {
   console.error("Missing TITLE/BODY");
+  process.exit(1);
+}
+// Nur eigene Seiten, wie isOwnSite() in der App und ziel() im Service Worker
+if (DEEPLINK && !/^https:\/\/([a-z0-9-]+\.)*svohandball\.de\//.test(DEEPLINK)) {
+  console.error(`Ungültiger Link "${DEEPLINK}". Erlaubt sind nur Adressen unter https://svohandball.de/`);
   process.exit(1);
 }
 
@@ -59,7 +66,7 @@ async function sendNow() {
   await getMessaging().send({
     topic: "all",
     notification: { title: TITLE, body: BODY },
-    data: { kind: "admin", sentAt: DateTime.now().setZone(TZ).toISO() },
+    data: { kind: "admin", sentAt: DateTime.now().setZone(TZ).toISO(), ...(DEEPLINK ? { deeplink: DEEPLINK } : {}) },
     android: { notification: { tag: "admin-broadcast" } },
     apns: { headers: { "apns-collapse-id": "admin-broadcast" } }
   });
@@ -116,6 +123,7 @@ async function sendNow() {
     title: TITLE,
     body: BODY,
     topic: "all",
+    ...(DEEPLINK ? { deeplink: DEEPLINK } : {}),
     createdAt: now.toISO()
   });
 

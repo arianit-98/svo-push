@@ -630,7 +630,8 @@ async function processAdminQueue(now) {
     }
 
     console.log(`ADMIN QUEUE: SENDING -> topic=${topic} sendAt=${sendAt.toISO()}`);
-    await sendToTopic(topic, title, body, { kind: "admin", scheduledAt: sendAt.toISO() }, "admin-broadcast");
+    const deeplink = norm(it.deeplink);
+    await sendToTopic(topic, title, body, { kind: "admin", scheduledAt: sendAt.toISO(), ...(deeplink ? { deeplink } : {}) }, "admin-broadcast");
     markSent(id);
   }
 }

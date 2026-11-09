@@ -11,6 +11,10 @@ on:
         description: "Push body"
         required: true
         type: string
+      deeplink:
+        description: "Optional: Seite beim Antippen, nur https://svohandball.de/..."
+        required: false
+        type: string
       send_at:
         description: "Optional: Zeitpunkt (deutsche Zeit), z.B. 20.09.2026 17:00 oder 2026-09-20T17:00. Leer = sofort senden."
         required: false
@@ -51,6 +55,7 @@ jobs:
           TITLE: ${{ inputs.title }}
           BODY: ${{ inputs.body }}
           SEND_AT: ${{ inputs.send_at }}
+          DEEPLINK: ${{ inputs.deeplink }}
         run: node scripts/admin_push_dispatch.mjs
 
       - name: Commit queue changes (if any)
