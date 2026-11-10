@@ -152,7 +152,8 @@
     "result|b1|aDRhfDk1OTA4NDY": true,
     "admin|2026-11-09T19:00:00.000+01:00|🔥 Es ist Neckar-Derby-Woche!|Samstag, 20 Uhr: Germanen gegen Piranhas, zum ersten Mal in der Landesliga. Alle Infos zum Derby hier.": true,
     "d2jugend|d4|aDRhfDk2Mzg3NjE|2026-11-14T11:00:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
-    "reloc|c1|aDRhfDk1OTIzNTY|2027-03-14T15:00:00.000+01:00|Leintalsporthalle, Würzburger Straße, D-74078 Heilbronn-Frankenbach|away": true
+    "reloc|c1|aDRhfDk1OTIzNTY|2027-03-14T15:00:00.000+01:00|Leintalsporthalle, Würzburger Straße, D-74078 Heilbronn-Frankenbach|away": true,
+    "b1|d4|aDRhfDk1OTA4NTY|2026-11-14T12:30:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1005,7 +1006,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-10T12:20:37.094+01:00",
+    "lastRun": "2026-11-10T12:30:50.823+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {}
