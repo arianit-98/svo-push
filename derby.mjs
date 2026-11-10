@@ -6,14 +6,13 @@ import { DateTime } from "luxon";
 
 const TZ = "Europe/Berlin";
 
-// Derby-Eintrag für ein Spiel oder null. bis = letzter Tag (einschließlich), an dem Texte und Link gelten.
+// Derby-Eintrag für ein Spiel oder null: Gegner passt und das Spiel liegt am `datum` des Eintrags (Hin- und
+// Rückspiel haben je einen eigenen Eintrag). Wird ein Derby auf einen anderen Tag verlegt, `datum` nachziehen.
+// Ohne `deeplink` im Eintrag gilt der normale Link des Teams.
 export function derbyFuer(feed, game, now) {
-  if (!feed.derbys || game.spieltag) return null;
-  return feed.derbys.find((d) => {
-    if (!d.gegner.test(game.opponent || "")) return false;
-    const bis = DateTime.fromISO(d.bis, { zone: TZ }).endOf("day");
-    return bis.isValid && now <= bis;
-  }) || null;
+  if (!feed.derbys || game.spieltag || !game.start) return null;
+  const tag = game.start.setZone(TZ).toISODate();
+  return feed.derbys.find((d) => d.datum === tag && d.gegner.test(game.opponent || "")) || null;
 }
 
 // Wer gerade vorne liegt, aus Sicht des SVO

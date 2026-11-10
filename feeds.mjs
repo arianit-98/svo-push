@@ -23,16 +23,27 @@ export const FEEDS = [
     teamMatch: "SV Obrigheim",
     deeplink: "https://svohandball.de/de/app/herren.php",
     resultMinMinutes: 75, // 2 × 30 min
-    // Derby-Modus (derby.mjs): eigene Texte und Link für Spiele gegen diese Gegner, bis einschließlich `bis`.
-    // Rückspiel o.ä.: weitere Zeile, `bis` auf den Tag nach dem Spiel (Ergebnis kommt evtl. erst spät).
+    // Derby-Modus (derby.mjs): eigene Texte für das Spiel gegen `gegner` am Tag `datum` (Spieltag laut H4A).
+    // Bei einer Verlegung auf einen anderen Tag `datum` anpassen. Ohne `deeplink` öffnet die Push herren.php.
     derbys: [
       {
+        // Hinspiel: Sa 14.11.2026 20:00, HA Neckarelz – SVO, Pattberghalle
         gegner: /Neckarelz/i,
+        datum: "2026-11-14",
         name: "Neckar-Derby",
         deeplink: "https://svohandball.de/de/app/derby.php",
-        bis: "2026-11-15",
         zeile: "Germanen gegen Piranhas",
         zeileH1: "Ab in die Pattberghalle!",
+        sieg: "Die Neckar-Hoheit liegt in Obrigheim!",
+      },
+      {
+        // Rückspiel: Sa 23.01.2027 18:00, SVO – HA Neckarelz, Neckarhalle. Gibt es bis dahin eine neue
+        // Derby-Seite, hier `deeplink` ergänzen (derby.php zeigt sonst noch das Hinspiel).
+        gegner: /Neckarelz/i,
+        datum: "2027-01-23",
+        name: "Neckar-Derby",
+        zeile: "Germanen gegen Piranhas",
+        zeileH1: "Ab in die Neckarhalle!",
         sieg: "Die Neckar-Hoheit liegt in Obrigheim!",
       },
     ],
