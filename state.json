@@ -150,7 +150,8 @@
     "live|b1|aDRhfDk1OTA4NDY": true,
     "halbzeit|b1|aDRhfDk1OTA4NDY": true,
     "result|b1|aDRhfDk1OTA4NDY": true,
-    "admin|2026-11-09T19:00:00.000+01:00|🔥 Es ist Neckar-Derby-Woche!|Samstag, 20 Uhr: Germanen gegen Piranhas, zum ersten Mal in der Landesliga. Alle Infos zum Derby hier.": true
+    "admin|2026-11-09T19:00:00.000+01:00|🔥 Es ist Neckar-Derby-Woche!|Samstag, 20 Uhr: Germanen gegen Piranhas, zum ersten Mal in der Landesliga. Alle Infos zum Derby hier.": true,
+    "d2jugend|d4|aDRhfDk2Mzg3NjE|2026-11-14T11:00:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1003,7 +1004,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-10T07:05:25.926+01:00",
+    "lastRun": "2026-11-10T11:00:55.718+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {}
