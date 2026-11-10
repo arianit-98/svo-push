@@ -37,11 +37,12 @@ export const FEEDS = [
         sieg: "Die Neckar-Hoheit liegt in Obrigheim!",
       },
       {
-        // Rückspiel: Sa 23.01.2027 18:00, SVO – HA Neckarelz, Neckarhalle. Gibt es bis dahin eine neue
-        // Derby-Seite, hier `deeplink` ergänzen (derby.php zeigt sonst noch das Hinspiel).
+        // Rückspiel: Sa 23.01.2027 18:00, SVO – HA Neckarelz, Neckarhalle. derby.php wird bis dahin für das
+        // Rückspiel neu gebaut (gleiche Adresse); die erste Erinnerung geht am Di 19.01.2027 18:00 raus.
         gegner: /Neckarelz/i,
         datum: "2027-01-23",
         name: "Neckar-Derby",
+        deeplink: "https://svohandball.de/de/app/derby.php",
         zeile: "Germanen gegen Piranhas",
         zeileH1: "Ab in die Neckarhalle!",
         sieg: "Die Neckar-Hoheit liegt in Obrigheim!",

@@ -18,7 +18,7 @@ assert.ok(d, "Hinspiel ist Derby");
 assert.equal(d.deeplink, "https://svohandball.de/de/app/derby.php");
 const r = derbyFuer(herren, rueckspiel, jetzt);
 assert.ok(r && r !== d, "Rückspiel hat eigenen Eintrag, auch schon vor dem Hinspiel");
-assert.equal(r.deeplink, undefined, "Rückspiel: normaler Link (herren.php)");
+assert.equal(r.deeplink, "https://svohandball.de/de/app/derby.php", "Rückspiel: dieselbe Derby-Seite");
 assert.equal(derbyErinnerung(r, "h1").zeile, "Ab in die Neckarhalle!");
 assert.equal(derbyFuer(herren, { ...derbySpiel, opponent: "TSV Wieblingen" }, jetzt), null, "anderer Gegner am Derbytag");
 assert.equal(derbyFuer(herren, { ...derbySpiel, start: zeit("2026-12-05T20:00") }, jetzt), null, "Neckarelz an anderem Tag");
