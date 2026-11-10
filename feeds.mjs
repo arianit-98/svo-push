@@ -23,6 +23,19 @@ export const FEEDS = [
     teamMatch: "SV Obrigheim",
     deeplink: "https://svohandball.de/de/app/herren.php",
     resultMinMinutes: 75, // 2 × 30 min
+    // Derby-Modus (derby.mjs): eigene Texte und Link für Spiele gegen diese Gegner, bis einschließlich `bis`.
+    // Rückspiel o.ä.: weitere Zeile, `bis` auf den Tag nach dem Spiel (Ergebnis kommt evtl. erst spät).
+    derbys: [
+      {
+        gegner: /Neckarelz/i,
+        name: "Neckar-Derby",
+        deeplink: "https://svohandball.de/de/app/derby.php",
+        bis: "2026-11-15",
+        zeile: "Germanen gegen Piranhas",
+        zeileH1: "Ab in die Pattberghalle!",
+        sieg: "Die Neckar-Hoheit liegt in Obrigheim!",
+      },
+    ],
   },
   {
     teamKey: "herren2",

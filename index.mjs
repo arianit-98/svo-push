@@ -5,6 +5,7 @@ import { initializeApp, cert } from "firebase-admin/app";
 import { getMessaging } from "firebase-admin/messaging";
 import { FEEDS, H4A_URL } from "./feeds.mjs";   // Teams und Liga-IDs
 import { liveAktion, liveLaeuft, liveOffen, halbzeitStand } from "./live.mjs";
+import { derbyFuer, derbyErinnerung, derbyLiveTitel, derbyHalbzeit, derbyErgebnis } from "./derby.mjs";
 
 const TZ = "Europe/Berlin";
 const STATE_PATH = "./state.json";
@@ -257,7 +258,9 @@ async function sendResultIfDue(feed, game, eventKey, now, resultsSince) {
   const us = homeAway === "home" ? homeGoals : guestGoals;
   const them = homeAway === "home" ? guestGoals : homeGoals;
   const outcome = us > them ? "✅ Sieg" : us < them ? "❌ Niederlage" : "🤝 Unentschieden";
-  const title = `${outcome} – ${feed.teamLabel} 💛💙`;
+  const derby = derbyFuer(feed, game, now);
+  const derbyText = derby && derbyErgebnis(derby, homeAway, homeGoals, guestGoals);
+  const title = derbyText ? derbyText.titel : `${outcome} – ${feed.teamLabel} 💛💙`;
 
   const homeName = homeAway === "home" ? feed.clubShort : opponent;
   const guestName = homeAway === "home" ? opponent : feed.clubShort;
@@ -268,6 +271,7 @@ async function sendResultIfDue(feed, game, eventKey, now, resultsSince) {
     lines.push(`Halbzeit ${game.homeGoalsHalf}:${game.guestGoalsHalf}`);
   }
   if (game.comment) lines.push(game.comment);
+  if (derbyText?.zeile) lines.push(derbyText.zeile);
 
   console.log(`RESULT -> ${feed.teamKey} event=${eventKey} ${homeGoals}:${guestGoals}`);
   await sendPush(
@@ -283,7 +287,7 @@ async function sendResultIfDue(feed, game, eventKey, now, resultsSince) {
       opponent,
       homeGoals,
       guestGoals,
-      ...linkData(feed),
+      ...linkData(feed, derby),
     },
     makeCollapseId("result", feed.teamKey, eventKey)
   );
@@ -301,11 +305,13 @@ async function sendHalbzeitIfDue(feed, game, eventKey, now) {
   const [heimTore, gastTore] = stand.split(":");
   const homeName = game.homeAway === "home" ? feed.clubShort : game.opponent;
   const guestName = game.homeAway === "home" ? game.opponent : feed.clubShort;
+  const derby = derbyFuer(feed, game, now);
+  const derbyText = derby && derbyHalbzeit(derby, game.homeAway, heimTore, gastTore);
   console.log(`HALBZEIT -> ${feed.teamKey} event=${eventKey} ${stand}`);
   await sendPush(
     { condition: anyTopicCondition(Object.values(TOPICS[feed.teamKey])) },
-    `⏸️ Halbzeit – ${feed.teamLabel} 💛💙`,
-    `${homeName} ${stand} ${guestName}`,
+    derbyText ? derbyText.titel : `⏸️ Halbzeit – ${feed.teamLabel} 💛💙`,
+    [`${homeName} ${stand} ${guestName}`, derbyText?.zeile].filter(Boolean).join("\n"),
     {
       kind: "halftime",
       team: feed.teamKey,
@@ -314,7 +320,7 @@ async function sendHalbzeitIfDue(feed, game, eventKey, now) {
       opponent: game.opponent,
       homeGoals: heimTore,
       guestGoals: gastTore,
-      ...linkData(feed),
+      ...linkData(feed, derby),
     },
     makeCollapseId("halbzeit", feed.teamKey, eventKey)
   );
@@ -330,12 +336,13 @@ async function sendLiveIfDue(feed, game, eventKey, now) {
   const id = `live|${feed.teamKey}|${eventKey}`;
   if (wasSent(id)) return;
 
+  const derby = derbyFuer(feed, game, now);
   console.log(`LIVE -> ${feed.teamKey} event=${eventKey}`);
   await sendPush(
     { condition: anyTopicCondition(Object.values(TOPICS[feed.teamKey])) },
-    `🔴 ${feed.teamLabel} – Liveticker läuft 💛💙`,
+    derby ? derbyLiveTitel(derby) : `🔴 ${feed.teamLabel} – Liveticker läuft 💛💙`,
     `${makeMatchupLine(feed, game.homeAway, game.opponent)}\nJetzt live verfolgen`,
-    { kind: "live", team: feed.teamKey, eventKey, ...linkData(feed) },
+    { kind: "live", team: feed.teamKey, eventKey, ...linkData(feed, derby) },
     makeCollapseId("live", feed.teamKey, eventKey)
   );
   markSent(id);
@@ -351,19 +358,20 @@ async function sendLiveStand(feed, game, eventKey, now) {
   if (!aktion) return;
   const { art, stand } = aktion;
   const [heimTore, gastTore] = stand.split(":");
+  const derby = derbyFuer(feed, game, now);
 
   console.log(`LIVESTAND -> ${feed.teamKey} event=${eventKey} ${stand} (${art})`);
   await sendData(`live_${feed.teamKey}`, {
     kind: art,
     team: feed.teamKey,
-    teamLabel: feed.teamLabel,
+    teamLabel: derby ? derby.name : feed.teamLabel,
     eventKey,
     heim: game.homeTeam,
     gast: game.guestTeam,
     heimTore,
     gastTore,
     ticker: game.ticker,
-    ...linkData(feed),
+    ...linkData(feed, derby),
   });
   state.live[eventKey] = { stand, at: now.toISO(), ...(art === "live_ende" ? { ende: true } : {}) };
 }
@@ -498,8 +506,9 @@ async function sendSpieltagErgebnisse(feed, games, now, resultsSince) {
 // "deeplink" öffnet die App (ab Version 1.1) nativ. Bewusst kein "url"-Feld mehr: das hat der alte
 // pushNotificationActionPerformed-Listener auf der Startseite gelesen und konnte so später
 // nochmal zur Seite einer alten Push springen.
-function linkData(feed) {
-  return { deeplink: feed.deeplink };
+// Im Derby (derby.mjs) zeigt der Link auf die Derby-Seite statt auf die Team-Seite
+function linkData(feed, derby = null) {
+  return { deeplink: derby?.deeplink || feed.deeplink };
 }
 
 function formatTime(dt) {
@@ -796,7 +805,7 @@ async function processAdminQueue(now) {
                 newLocation: currentSnapshot.location || "",
                 homeAway: currentSnapshot.homeAway,
                 opponent: currentSnapshot.opponent,
-                ...linkData(feed),
+                ...linkData(feed, derbyFuer(feed, game, now)),
               },
               collapseId
             );
@@ -832,8 +841,11 @@ async function processAdminQueue(now) {
 
         const topic = TOPICS[feed.teamKey][off.key];
 
-        const title = game.spieltag ? spieltagTitel(feed) : makeTitle(feed, homeAway);
-        const body = game.spieltag ? spieltagText(game) : makeBody(feed, homeAway, opponent, start, location);
+        const derby = derbyFuer(feed, game, now);
+        const derbyText = derby && derbyErinnerung(derby, off.key);
+        const title = game.spieltag ? spieltagTitel(feed) : derbyText ? derbyText.titel : makeTitle(feed, homeAway);
+        let body = game.spieltag ? spieltagText(game) : makeBody(feed, homeAway, opponent, start, location);
+        if (derbyText?.zeile) body += `\n${derbyText.zeile}`;
 
         console.log(`SENDING -> topic=${topic} id=${id} fireAt=${fireAt.toISO()}`);
 
@@ -847,7 +859,7 @@ async function processAdminQueue(now) {
           opponent,
           location,
           summary,
-          ...linkData(feed),
+          ...linkData(feed, derby),
         });
 
         markSent(id);
