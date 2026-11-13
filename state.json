@@ -156,7 +156,8 @@
     "b1|d4|aDRhfDk1OTA4NTY|2026-11-14T12:30:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
     "c1|d4|aDRhfDk1OTIyNzE|2026-11-14T14:15:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
     "herren|d4|aDRhfDkzOTAyMzY|2026-11-14T20:00:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|away": true,
-    "d2jugend|d1|aDRhfDk2Mzg3NjE|2026-11-14T11:00:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true
+    "d2jugend|d1|aDRhfDk2Mzg3NjE|2026-11-14T11:00:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
+    "b1|d1|aDRhfDk1OTA4NTY|2026-11-14T12:30:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1009,7 +1010,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-13T11:00:53.986+01:00",
+    "lastRun": "2026-11-13T12:30:54.019+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {}
