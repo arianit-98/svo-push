@@ -160,7 +160,8 @@
     "b1|d1|aDRhfDk1OTA4NTY|2026-11-14T12:30:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
     "c1|d1|aDRhfDk1OTIyNzE|2026-11-14T14:15:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
     "herren|d1|aDRhfDkzOTAyMzY|2026-11-14T20:00:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|away": true,
-    "admin|2026-11-14T09:00:00.000+01:00|🔥 Heute ist Neckar-Derby!|Erst die Jugend, am Abend das Neckar-Derby: HA Neckarelz – SV Obrigheim, 20:00 Uhr in der Pattberghalle.": true
+    "admin|2026-11-14T09:00:00.000+01:00|🔥 Heute ist Neckar-Derby!|Erst die Jugend, am Abend das Neckar-Derby: HA Neckarelz – SV Obrigheim, 20:00 Uhr in der Pattberghalle.": true,
+    "d2jugend|h1|aDRhfDk2Mzg3NjE|2026-11-14T11:00:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1013,7 +1014,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-14T09:00:54.156+01:00",
+    "lastRun": "2026-11-14T10:00:51.924+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {}
