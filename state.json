@@ -165,7 +165,8 @@
     "live|d2jugend|aDRhfDk2Mzg3NjE": true,
     "b1|h1|aDRhfDk1OTA4NTY|2026-11-14T12:30:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
     "halbzeit|d2jugend|aDRhfDk2Mzg3NjE": true,
-    "result|d2jugend|aDRhfDk2Mzg3NjE": true
+    "result|d2jugend|aDRhfDk2Mzg3NjE": true,
+    "live|b1|aDRhfDk1OTA4NTY": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1018,7 +1019,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-14T12:00:55.213+01:00",
+    "lastRun": "2026-11-14T12:35:29.632+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
@@ -1026,6 +1027,10 @@
       "stand": "22:23",
       "at": "2026-11-14T11:58:39.099+01:00",
       "ende": true
+    },
+    "aDRhfDk1OTA4NTY": {
+      "stand": "4:6",
+      "at": "2026-11-14T12:38:42.106+01:00"
     }
   }
 }
