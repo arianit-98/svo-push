@@ -176,7 +176,8 @@
     "live|herren|aDRhfDkzOTAyMzY": true,
     "halbzeit|herren|aDRhfDkzOTAyMzY": true,
     "result|herren|aDRhfDkzOTAyMzY": true,
-    "d2jugend|d4|aDRhfDk2Mzg2ODE|2026-11-22T13:00:00.000+01:00|Sporthalle auf der Schanz, Kraichgauplatz 17, D-74080 Heilbronn-Böckingen|away": true
+    "d2jugend|d4|aDRhfDk2Mzg2ODE|2026-11-22T13:00:00.000+01:00|Sporthalle auf der Schanz, Kraichgauplatz 17, D-74080 Heilbronn-Böckingen|away": true,
+    "e1jugend|d4|aDRhLXRhZ3xlMWp1Z2VuZHwyMDI2LTExLTIy|2026-11-22T14:00:00.000+01:00|Jahnhalle, Jahnstraße 91, D-74321 Bietigheim-Bissingen|tag": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1029,7 +1030,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-18T13:00:50.316+01:00",
+    "lastRun": "2026-11-18T14:00:55.787+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {}
