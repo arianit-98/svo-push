@@ -196,7 +196,8 @@
     "herren|h1|aDRhfDkzOTA0MjE|2026-11-22T18:00:00.000+01:00|Neckarhalle, Am Park 8, D-74847 Obrigheim|home": true,
     "live|b1|aDRhfDk1OTA4MjE": true,
     "halbzeit|b1|aDRhfDk1OTA4MjE": true,
-    "live|herren|aDRhfDkzOTA0MjE": true
+    "live|herren|aDRhfDkzOTA0MjE": true,
+    "result|b1|aDRhfDk1OTA4MjE": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1049,7 +1050,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-22T18:15:35.424+01:00",
+    "lastRun": "2026-11-22T18:20:37.718+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
@@ -1064,8 +1065,8 @@
       "ende": true
     },
     "aDRhfDkzOTA0MjE": {
-      "stand": "7:4",
-      "at": "2026-11-22T18:17:49.502+01:00"
+      "stand": "10:5",
+      "at": "2026-11-22T18:23:52.656+01:00"
     }
   }
 }
