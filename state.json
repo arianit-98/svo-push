@@ -190,7 +190,9 @@
     "e1jugend|h1|aDRhLXRhZ3xlMWp1Z2VuZHwyMDI2LTExLTIy|2026-11-22T14:00:00.000+01:00|Jahnhalle, Jahnstraße 91, D-74321 Bietigheim-Bissingen|tag": true,
     "d1jugend|h1|aDRhfDk1OTk3ODE|2026-11-22T15:00:00.000+01:00|Grünewaldhalle, Vitryallee 7, D-97941 Tauberbischofsheim|away": true,
     "live|d1jugend|aDRhfDk1OTk3ODE": true,
-    "halbzeit|d1jugend|aDRhfDk1OTk3ODE": true
+    "halbzeit|d1jugend|aDRhfDk1OTk3ODE": true,
+    "b1|h1|aDRhfDk1OTA4MjE|2026-11-22T17:00:00.000+01:00|Hohenlohe-Halle, Pfaffenmühlweg, D-74613 Öhringen|away": true,
+    "result|d1jugend|aDRhfDk1OTk3ODE": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1043,13 +1045,14 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-22T15:55:25.959+01:00",
+    "lastRun": "2026-11-22T16:00:54.809+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
     "aDRhfDk1OTk3ODE": {
       "stand": "27:20",
-      "at": "2026-11-22T15:58:38.267+01:00"
+      "at": "2026-11-22T16:00:54.809+01:00",
+      "ende": true
     }
   }
 }
