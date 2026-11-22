@@ -199,7 +199,8 @@
     "live|herren|aDRhfDkzOTA0MjE": true,
     "result|b1|aDRhfDk1OTA4MjE": true,
     "halbzeit|herren|aDRhfDkzOTA0MjE": true,
-    "result|herren|aDRhfDkzOTA0MjE": true
+    "result|herren|aDRhfDkzOTA0MjE": true,
+    "result-tag|e1jugend|2026-11-22": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1052,7 +1053,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-22T19:35:26.280+01:00",
+    "lastRun": "2026-11-23T00:01:07.967+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
