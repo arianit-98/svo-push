@@ -197,7 +197,8 @@
     "live|b1|aDRhfDk1OTA4MjE": true,
     "halbzeit|b1|aDRhfDk1OTA4MjE": true,
     "live|herren|aDRhfDkzOTA0MjE": true,
-    "result|b1|aDRhfDk1OTA4MjE": true
+    "result|b1|aDRhfDk1OTA4MjE": true,
+    "halbzeit|herren|aDRhfDkzOTA0MjE": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1050,7 +1051,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-22T18:40:38.070+01:00",
+    "lastRun": "2026-11-22T18:45:37.641+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
