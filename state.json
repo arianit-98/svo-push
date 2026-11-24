@@ -200,7 +200,8 @@
     "result|b1|aDRhfDk1OTA4MjE": true,
     "halbzeit|herren|aDRhfDkzOTA0MjE": true,
     "result|herren|aDRhfDkzOTA0MjE": true,
-    "result-tag|e1jugend|2026-11-22": true
+    "result-tag|e1jugend|2026-11-22": true,
+    "d2jugend|d4|aDRhfDk2Mzg2OTE|2026-11-28T11:00:00.000+01:00|Hardwaldhalle, Berliner Ring 18/1, D-75031 Eppingen|away": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1053,7 +1054,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-24T06:20:33.384+01:00",
+    "lastRun": "2026-11-24T11:01:03.345+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
