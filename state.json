@@ -203,7 +203,8 @@
     "result-tag|e1jugend|2026-11-22": true,
     "d2jugend|d4|aDRhfDk2Mzg2OTE|2026-11-28T11:00:00.000+01:00|Hardwaldhalle, Berliner Ring 18/1, D-75031 Eppingen|away": true,
     "b1|d4|aDRhfDk1OTA4MjY|2026-11-28T11:45:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
-    "c1|d4|aDRhfDk1OTIyNTE|2026-11-28T13:30:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true
+    "c1|d4|aDRhfDk1OTIyNTE|2026-11-28T13:30:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
+    "herren|d4|aDRhfDkzOTA0NTE|2026-11-28T18:00:00.000+01:00|Stadionhalle, Ludwigsburger Straße 70, D-71696 Möglingen|away": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1056,7 +1057,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-24T16:01:01.899+01:00",
+    "lastRun": "2026-11-24T18:00:57.639+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
