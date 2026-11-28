@@ -226,7 +226,8 @@
     "live|herren|aDRhfDkzOTA0NTE": true,
     "halbzeit|herren|aDRhfDkzOTA0NTE": true,
     "herren2|h1|aDRhfDk0NTAzMzY|2026-11-28T20:00:00.000+01:00|Stadionhalle, Ludwigsburger Straße 70, D-71696 Möglingen|away": true,
-    "result|herren|aDRhfDkzOTA0NTE": true
+    "result|herren|aDRhfDkzOTA0NTE": true,
+    "live|herren2|aDRhfDk0NTAzMzY": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1079,7 +1080,7 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-28T19:25:30.265+01:00",
+    "lastRun": "2026-11-28T20:05:38.877+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
@@ -1097,6 +1098,10 @@
       "stand": "22:18",
       "at": "2026-11-28T19:25:30.265+01:00",
       "ende": true
+    },
+    "aDRhfDk0NTAzMzY": {
+      "stand": "4:3",
+      "at": "2026-11-28T20:08:51.178+01:00"
     }
   }
 }
