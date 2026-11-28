@@ -215,7 +215,9 @@
     "d2jugend|h1|aDRhfDk2Mzg2OTE|2026-11-28T11:00:00.000+01:00|Hardwaldhalle, Berliner Ring 18/1, D-75031 Eppingen|away": true,
     "b1|h1|aDRhfDk1OTA4MjY|2026-11-28T11:45:00.000+01:00|Pattberghalle, Heidelbergerstrasse 39, D-74821 Mosbach-Neckarelz|home": true,
     "e2jugend|d1|aDRhLXRhZ3xlMmp1Z2VuZHwyMDI2LTExLTI5|2026-11-29T11:00:00.000+01:00|Nibelungen-Halle, Theodor-Heuss-Ring 21, D-74731 Walldürn|tag": true,
-    "live|d2jugend|aDRhfDk2Mzg2OTE": true
+    "live|d2jugend|aDRhfDk2Mzg2OTE": true,
+    "live|b1|aDRhfDk1OTA4MjY": true,
+    "halbzeit|d2jugend|aDRhfDk2Mzg2OTE": true
   },
   "events": {
     "aGFuZGJhbGw0YWxsLmJhZGVuLXd1ZXJ0dGVtYmVyZy44NTc4ODAx": {
@@ -1068,13 +1070,17 @@
     }
   },
   "meta": {
-    "lastRun": "2026-11-28T11:40:36.959+01:00",
+    "lastRun": "2026-11-28T11:45:37.094+01:00",
     "resultsSince": "2026-09-21T12:55:30.040+02:00"
   },
   "live": {
     "aDRhfDk2Mzg2OTE": {
-      "stand": "32:13",
-      "at": "2026-11-28T11:43:46.599+01:00"
+      "stand": "34:15",
+      "at": "2026-11-28T11:48:51.496+01:00"
+    },
+    "aDRhfDk1OTA4MjY": {
+      "stand": "3:1",
+      "at": "2026-11-28T11:48:50.558+01:00"
     }
   }
 }
